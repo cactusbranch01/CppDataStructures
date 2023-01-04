@@ -1,0 +1,14 @@
+# ninja log v5
+3	336	6945644432835291	CMakeFiles/dataStructuresC__.dir/main.cpp.obj	353a852cc6a0715
+336	445	6945644433878525	dataStructuresC__.exe	c9e2ba8830a72679
+0	126	6945656237877677	build.ninja	7a6c442938306d64
+6	237	6933957320713058	CMakeFiles/dataStructuresC__.dir/queue.cpp.obj	e5bab4514b696b66
+3	266	6934301493617952	CMakeFiles/dataStructuresC__.dir/stack.cpp.obj	8a9a959849eb340
+9	304	6937272435219314	CMakeFiles/dataStructuresC__.dir/node.cpp.obj	29b0bcf7b83857cf
+6	309	6937272435264945	CMakeFiles/dataStructuresC__.dir/linkedList.cpp.obj	2458c0308a2197a6
+20	333	6945656296239454	CMakeFiles/dataStructuresC__.dir/node.cpp.obj	60e50b9714fe0b13
+12	344	6945656296346228	CMakeFiles/dataStructuresC__.dir/stack.cpp.obj	a14dd76389f62c8f
+3	345	6945656296336203	CMakeFiles/dataStructuresC__.dir/queue.cpp.obj	c080ce2191ede8ec
+16	346	6945656296356337	CMakeFiles/dataStructuresC__.dir/linkedList.cpp.obj	8aa82bfd39cf9d13
+7	422	6945656297137976	CMakeFiles/dataStructuresC__.dir/main.cpp.obj	bc2a93ec3ad43142
+422	522	6945656298102381	dataStructuresC__.exe	c9e2ba8830a72679
