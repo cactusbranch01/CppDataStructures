@@ -19,7 +19,8 @@ class LinkedList {
     int capacity;
 
 public:
-    explicit LinkedList(int cap, int headData);
+    LinkedList(int cap, int headData);
+    LinkedList();
     bool isFull();
     bool isEmpty();
     int getSize();

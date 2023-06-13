@@ -25,6 +25,18 @@ LinkedList::LinkedList(int cap, int headData)
     capacity = cap;
 }
 
+LinkedList::LinkedList()
+{
+    // Fields
+    elements = new Node[64];
+    elements[0].addData(0);
+    headLoc = 0;
+    currentLoc = 0;
+    lastLoc = 0;
+    size = 1;
+    capacity = 64;
+}
+
 // Method to check if the linked list is full.
 // @Returns:
 //      a bool representing if the storage is full.

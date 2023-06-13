@@ -6,6 +6,7 @@
 #include "queue.h"
 #include "stack.h"
 #include "linkedList.h"
+#include "hash.h"
 using namespace std;
 
 int main()
@@ -93,4 +94,36 @@ int main()
     // Tests size and capacity get methods.
     cout << "The size is: " << l.getSize() << endl;
     cout << "The capacity is: " << l.getCapacity() << endl;
+
+    cout << "\n" << endl;
+
+    // Create a new hash table with 5 buckets
+    Hash hashTable(5);
+
+    // Insert some data into the hash table
+    hashTable.insert(10);
+    hashTable.insert(20);
+    hashTable.insert(30);
+    hashTable.insert(40);
+    hashTable.insert(50);
+    hashTable.insert(10);
+
+    // Check if the hash table is empty
+    bool isEmpty = hashTable.isEmpty();
+    std::cout << "Is hash table empty? " << (isEmpty ? "Yes" : "No") << std::endl;
+
+    // Get the size and load factor of the hash table
+    int size = hashTable.getSize();
+    double loadFactor = hashTable.getLoadFactor();
+    std::cout << "Size of hash table: " << size << std::endl;
+    std::cout << "Load factor of hash table: " << loadFactor << std::endl;
+
+    // Get the table size
+    int tableSize = hashTable.getTableSize();
+    std::cout << "Table size: " << tableSize << std::endl;
+
+    // Count the occurrences of a value in the hash table
+    int value = 10;
+    int occurrences = hashTable.occurrences(value);
+    std::cout << "Occurrences of " << value << " in the hash table: " << occurrences << std::endl;
 }
