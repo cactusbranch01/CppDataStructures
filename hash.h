@@ -5,25 +5,26 @@
 #ifndef DATASTRUCTURESC___HASH_H
 #define DATASTRUCTURESC___HASH_H
 
-#include <stdexcept>
-#include "node.h"
 #include "linkedList.h"
+#include "node.h"
+#include <stdexcept>
+
 
 class Hash {
-    // Fields
-    LinkedList *elements;
-    int tableSize;
-    int size;
+  // Fields
+  LinkedList *elements;
+  int tableSize;
+  int size;
 
 public:
-    explicit Hash(int n);
-    bool isEmpty();
-    int getSize();
-    double getLoadFactor();
-    int getTableSize();
-    void insert(int data);
-    int occurrences(int data);
-    void remove(int data);
+  explicit Hash(int n);
+  bool isEmpty();
+  int getSize();
+  double getLoadFactor();
+  int getTableSize();
+  void insert(int data);
+  int occurrences(int data);
+  void remove(int data);
 };
 
-#endif //DATASTRUCTURESC___HASH_H
+#endif // DATASTRUCTURESC___HASH_H

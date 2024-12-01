@@ -9,16 +9,16 @@
 using namespace std;
 
 class Node {
-    int item;
-    int reference;
+  int item;
+  int reference;
 
 public:
-    explicit Node();
-    bool isEmpty();
-    int getData();
-    int getReference();
-    void addData(int newData);
-    void addReference(int newReference);
+  explicit Node();
+  bool isEmpty();
+  int getData();
+  int getReference();
+  void addData(int newData);
+  void addReference(int newReference);
 };
 
 #endif

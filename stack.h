@@ -9,26 +9,25 @@
 using namespace std;
 
 // This Stack class implements the stack data structure.
-class Stack
-{
-    // Fields
-    int *elements;
-    int first;
-    int last;
-    int count;
-    int max;
+class Stack {
+  // Fields
+  int *elements;
+  int first;
+  int last;
+  int count;
+  int max;
 
 public:
-    explicit Stack(int cap);
-    int getSize();
-    int getCap();
-    void push(int element);
-    int pop();
-    int peek();
-    bool isEmpty();
-    bool isFull();
-    bool contains(int element);
-    void removeAll();
+  explicit Stack(int cap);
+  int getSize();
+  int getCap();
+  void push(int element);
+  int pop();
+  int peek();
+  bool isEmpty();
+  bool isFull();
+  bool contains(int element);
+  void removeAll();
 };
 
 #endif
