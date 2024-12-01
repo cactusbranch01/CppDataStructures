@@ -3,7 +3,7 @@
 //
 
 #include "hash.h"
-#include "linkedList.h"
+#include "linked_list.h"
 #include "queue.h"
 #include "stack.h"
 #include <iostream>

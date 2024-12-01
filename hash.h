@@ -5,7 +5,7 @@
 #ifndef DATASTRUCTURESC___HASH_H
 #define DATASTRUCTURESC___HASH_H
 
-#include "linkedList.h"
+#include "linked_list.h"
 #include "node.h"
 #include <stdexcept>
 
