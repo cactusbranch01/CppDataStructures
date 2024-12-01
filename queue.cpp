@@ -4,88 +4,58 @@
 
 #include "queue.h"
 
-// Constructor to initialize a new queue object.
-// @Param:
-//      cap: an int representing the new capacity of the queue.
-Queue::Queue(int cap) {
-  elements = new int[cap];
-  max = cap;
-  first = 0;
-  last = -1;
-  count = 0;
+using namespace std;
+
+Queue::Queue(int cap) : first_(0), last_(-1), count_(0), max_(cap) {
+  elements_ = new int[cap];
 }
 
-// Method to return the size of the queue.
-// @Returns:
-//      an int representing the size of the queue.
-int Queue::getSize() { return count; }
+int Queue::getSize() { return count_; }
 
-// Method to return the capacity of the queue.
-// @Returns:
-//      an int representing the capacity of the queue.
-int Queue::getCap() { return max; }
+int Queue::getCap() { return max_; }
 
-// Method to add a new element to the end of the queue.
-// @Param:
-//      element: an int representing the item to be added.
 void Queue::add(int element) {
   if (isFull()) {
-    throw std::invalid_argument("Error, queue is full!");
+    throw runtime_error("Error, queue is full!");
   }
-  last = (last + 1) % max;
-  elements[last] = element;
-  count += 1;
+  last_ = (last_ + 1) % max_;
+  elements_[last_] = element;
+  count_ += 1;
 }
 
-// Method to remove and return the first element in the queue.
-// @Returns:
-//      an int representing the removed item.
 int Queue::remove() {
   if (isEmpty()) {
-    throw std::invalid_argument("Error, queue is empty!");
+    throw runtime_error("Error, queue is empty!");
   }
-  int temp = elements[first];
-  first = (first + 1) % max;
-  count -= 1;
+  int temp = elements_[first_];
+  first_ = (first_ + 1) % max_;
+  count_ -= 1;
   return temp;
 }
 
-// Method that returns the first element in the queue.
-// @Returns:
-//      an int representing the first element in the queue.
 int Queue::peek() {
   if (isEmpty()) {
-    throw std::invalid_argument("Error, queue is empty!");
+    throw runtime_error("Error, queue is empty!");
   }
-  return elements[first];
+  return elements_[first_];
 }
 
-// Method that checks if the queue is empty or not.
-// @Returns:
-//      returns true if the queue is empty and false if it's not.
-bool Queue::isEmpty() { return getSize() == 0; }
+bool Queue::isEmpty() { return count_ == 0; }
 
-// Method that checks if the queue is full or not.
-// @Returns:
-//      returns true if the queue is full and false if it's not.
-bool Queue::isFull() { return getSize() == max; }
+bool Queue::isFull() { return count_ == max_; }
 
-// Method that checks if the queue contains a given element.
-// @Returns:
-//      true if it contains the element and false if it doesn't.
 bool Queue::contains(int element) {
-  for (int i = first; i <= last; i++) {
-    if (elements[i] == element) {
+  for (int i = first_; i <= last_; i++) {
+    if (elements_[i] == element) {
       return true;
     }
   }
   return false;
 }
 
-// Method that removes all the elements in the queue.
 void Queue::removeAll() {
-  for (int i = first; i <= last; i++) {
-    elements[i] = 0;
+  for (int i = first_; i <= last_; i++) {
+    elements_[i] = 0;
   }
-  count = 0;
+  count_ = 0;
 }

@@ -2,20 +2,17 @@
 // Created by Ben Roberts on 12/22/2022.
 //
 
-#ifndef DATASTRUCTURESC___STACK_H
-#define DATASTRUCTURESC___STACK_H
+#pragma once
 
 #include <stdexcept>
 using namespace std;
 
-// This Stack class implements the stack data structure.
 class Stack {
-  // Fields
-  int *elements;
-  int first;
-  int last;
-  int count;
-  int max;
+  int *elements_;
+  int first_;
+  int last_;
+  int count_;
+  int max_;
 
 public:
   explicit Stack(int cap);
@@ -29,5 +26,3 @@ public:
   bool contains(int element);
   void removeAll();
 };
-
-#endif

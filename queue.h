@@ -2,20 +2,18 @@
 // Created by benrr on 12/21/2022.
 //
 
-#ifndef DATASTRUCTURESC___QUEUE_H
-#define DATASTRUCTURESC___QUEUE_H
+#pragma once
 
 #include <stdexcept>
+
 using namespace std;
 
-// This Queue class implements the queue data structure.
 class Queue {
-  // Fields
-  int *elements;
-  int first;
-  int last;
-  int count;
-  int max;
+  int *elements_;
+  int first_;
+  int last_;
+  int count_;
+  int max_;
 
 public:
   explicit Queue(int cap);
@@ -29,5 +27,3 @@ public:
   bool contains(int element);
   void removeAll();
 };
-
-#endif

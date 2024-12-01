@@ -2,19 +2,17 @@
 // Created by Ben Roberts on 6/12/2023.
 //
 
-#ifndef DATASTRUCTURESC___HASH_H
-#define DATASTRUCTURESC___HASH_H
+#pragma once
 
 #include "linked_list.h"
-#include "node.h"
 #include <stdexcept>
 
+template <typename ValueType>
 
 class Hash {
-  // Fields
-  LinkedList *elements;
-  int tableSize;
-  int size;
+  LinkedList<ValueType> *elements_;
+  int tableSize_;
+  int size_;
 
 public:
   explicit Hash(int n);
@@ -26,5 +24,3 @@ public:
   int occurrences(int data);
   void remove(int data);
 };
-
-#endif // DATASTRUCTURESC___HASH_H

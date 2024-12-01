@@ -3,8 +3,8 @@ CC = g++
 CFLAGS = -Wall -g
 
 # Source, header, and object files
-SOURCES = main.cpp hash.cpp linked_list.cpp node.cpp queue.cpp stack.cpp
-HEADERS = hash.h linked_list.h node.h queue.h stack.h
+SOURCES = main.cpp linked_list.cpp queue.cpp stack.cpp chaining.cpp
+HEADERS = queue.h stack.h
 OBJECTS = $(SOURCES:.cpp=.o)
 
 # Executable name

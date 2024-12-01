@@ -2,129 +2,121 @@
 // Created by Ben Roberts on 12/21/2022.
 //
 
-#include "hash.h"
-#include "linked_list.h"
+#include "chaining.cpp"
+#include "linked_list.cpp"
+#include "open_address.cpp"
 #include "queue.h"
 #include "stack.h"
+#include <cassert>
+#include <chrono>
 #include <iostream>
+#include <string>
 
 using namespace std;
 
+int testOpenAddressing(size_t testSize) {
+  OpenAddressTable<int, std::string> openHash;
+  auto start = std::chrono::high_resolution_clock::now();
+  for (size_t i = 0; i < testSize; ++i) {
+    openHash.insert(i, "Value_" + std::to_string(i));
+  }
+  auto insertEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> insertDuration = insertEnd - start;
+  std::cout << "Insertion of " << testSize
+            << " elements in an open address hashtable took "
+            << insertDuration.count() << " seconds.\n";
+
+  assert(openHash.getSize() == testSize &&
+         "Hash table size should match the number of inserted elements");
+
+  auto retrieveStart = std::chrono::high_resolution_clock::now();
+  for (size_t i = 0; i < testSize; ++i) {
+    std::string expectedValue = "Value_" + std::to_string(i);
+    assert(openHash.get(i) == expectedValue &&
+           "Retrieved value should match the inserted value");
+  }
+  auto retrieveEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> retrieveDuration = retrieveEnd - retrieveStart;
+  std::cout << "Retrieval of " << testSize
+            << " elements in an open address hashtable took "
+            << retrieveDuration.count() << " seconds.\n";
+
+  std::cout << "All tests passed successfully." << std::endl;
+  return 0;
+}
+
+int testChainingHash(size_t testSize) {
+  Chaining<int, std::string> chainingHash;
+  auto start = std::chrono::high_resolution_clock::now();
+  for (size_t i = 0; i < testSize; ++i) {
+    chainingHash.insert(i, "Value_" + std::to_string(i));
+  }
+  auto insertEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> insertDuration = insertEnd - start;
+  std::cout << "Insertion of " << testSize
+            << " elements in a chaining hashtable took "
+            << insertDuration.count() << " seconds.\n";
+
+  assert(chainingHash.getSize() == testSize &&
+         "Hash table size should match the number of inserted elements");
+
+  auto retrieveStart = std::chrono::high_resolution_clock::now();
+  for (size_t i = 0; i < testSize; ++i) {
+    std::string expectedValue = "Value_" + std::to_string(i);
+    assert(chainingHash.get(i) == expectedValue &&
+           "Retrieved value should match the inserted value");
+  }
+  auto retrieveEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> retrieveDuration = retrieveEnd - retrieveStart;
+  std::cout << "Retrieval of " << testSize
+            << " elements in a chaining hashtable took "
+            << retrieveDuration.count() << " seconds.\n";
+
+  std::cout << "All tests passed successfully." << std::endl;
+  return 0;
+}
+
+int testLinkedList(size_t testSize) {
+  LinkedList<std::pair<int, std::string>> linkedList;
+
+  auto insertStart = std::chrono::high_resolution_clock::now();
+  for (int i = 0; i < (int) testSize; ++i) {
+    linkedList.pushBack({i, "Value_" + std::to_string(i)});
+  }
+  auto insertEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> insertDuration = insertEnd - insertStart;
+  std::cout << "Insertion of " << testSize
+            << " elements in the linked list took " << insertDuration.count()
+            << " seconds.\n";
+
+  assert(linkedList.size() == static_cast<size_t>(testSize) &&
+         "Linked list size should match the number of inserted elements");
+
+  auto retrieveStart = std::chrono::high_resolution_clock::now();
+  for (int i = 0; i < (int) testSize; ++i) {
+    auto frontPair = linkedList.front();
+    assert(frontPair.first == i &&
+           "Retrieved key should match the inserted key");
+    std::string expectedValue = "Value_" + std::to_string(i);
+    assert(frontPair.second == expectedValue &&
+           "Retrieved value should match the inserted value");
+    linkedList.popFront();
+  }
+  auto retrieveEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> retrieveDuration = retrieveEnd - retrieveStart;
+  std::cout << "Retrieval of " << testSize
+            << " elements in the linked list took " << retrieveDuration.count()
+            << " seconds.\n";
+
+  assert(linkedList.isEmpty() &&
+         "Linked list should be empty after popping all elements");
+  std::cout << "All tests passed successfully.\n";
+  return 0;
+}
+
 int main() {
-  // Initializes new queue for testing.
-  Queue q(64);
-
-  // Adds test items.
-  q.add(1);
-  q.add(2);
-  q.add(3);
-
-  // Tests peek method.
-  cout << "The first element is: " << q.peek() << endl;
-  q.remove();
-
-  // Tests remove method.
-  cout << "The second element is: " << q.remove() << endl;
-  q.add(4);
-  cout << "The queue size is: " << q.getSize() << endl;
-  cout << "The third element is: " << q.remove() << endl;
-  cout << "The fourth element is: " << q.remove() << endl;
-
-  // Tests contains method.
-  std::cout << std::boolalpha;
-  cout << "The element does contain 4: " << bool(q.contains(4) == 0) << endl;
-
-  // Tests removeAll method.
-  q.removeAll();
-  cout << "After removal the size is: " << q.getSize() << endl;
-
-  // Tests getCap method.
-  cout << "The queue max is: " << q.getCap() << endl;
-
-  cout << "\n" << endl;
-
-  // Initializes new stack for testing.
-  Stack s(64);
-
-  // Adds test items.
-  s.push(1);
-  s.push(2);
-  s.push(3);
-
-  // Tests peek method.
-  cout << "The top element is: " << s.peek() << endl;
-  s.pop();
-
-  // Tests remove method.
-  cout << "The second element is: " << s.pop() << endl;
-  cout << "The stack size is: " << q.getSize() << endl;
-  cout << "The last element is: " << s.pop() << endl;
-
-  // Tests contains method.
-  std::cout << std::boolalpha;
-  cout << "The stack doesn't contain 4: " << bool(q.contains(4) == 0) << endl;
-
-  // Tests removeAll method.
-  s.removeAll();
-  cout << "After removal the size is: " << s.getSize() << endl;
-
-  // Tests getCap method.
-  cout << "The stack max is: " << s.getCap() << endl;
-
-  cout << "\n" << endl;
-
-  // Creates new LinkedList object for testing
-  LinkedList l(64, 1);
-
-  // Adds nodes to linked list
-  l.add(2);
-  l.add(3);
-
-  // Tests next and getCurrent methods.
-  cout << "The first node is: " << l.getCurrent() << endl;
-  l.next();
-  cout << "The second node is: " << l.getCurrent() << endl;
-  l.next();
-  cout << "The last node is: " << l.getCurrent() << endl;
-
-  // Tests getHead and getLast methods.
-  cout << "The head node is: " << l.getHead() << endl;
-  cout << "The second node is: " << l.getLast() << endl;
-
-  // Tests size and capacity get methods.
-  cout << "The size is: " << l.getSize() << endl;
-  cout << "The capacity is: " << l.getCapacity() << endl;
-
-  cout << "\n" << endl;
-
-  // Create a new hash table with 5 buckets
-  Hash hashTable(5);
-
-  // Insert some data into the hash table
-  hashTable.insert(10);
-  hashTable.insert(20);
-  hashTable.insert(30);
-  hashTable.insert(40);
-  hashTable.insert(50);
-  hashTable.insert(10);
-
-  // Check if the hash table is empty
-  bool isEmpty = hashTable.isEmpty();
-  std::cout << "Is hash table empty? " << (isEmpty ? "Yes" : "No") << std::endl;
-
-  // Get the size and load factor of the hash table
-  int size = hashTable.getSize();
-  double loadFactor = hashTable.getLoadFactor();
-  std::cout << "Size of hash table: " << size << std::endl;
-  std::cout << "Load factor of hash table: " << loadFactor << std::endl;
-
-  // Get the table size
-  int tableSize = hashTable.getTableSize();
-  std::cout << "Table size: " << tableSize << std::endl;
-
-  // Count the occurrences of a value in the hash table
-  int value = 10;
-  int occurrences = hashTable.occurrences(value);
-  std::cout << "Occurrences of " << value
-            << " in the hash table: " << occurrences << std::endl;
+  testOpenAddressing(1'000'000);
+  testChainingHash(1'000'000);
+  testLinkedList(1'000'000);
+  return 0;
 }
