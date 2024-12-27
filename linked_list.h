@@ -5,7 +5,9 @@
 #pragma once
 
 #include <cstddef>
+#include <iterator>
 #include <stdexcept>
+
 
 using namespace std;
 
@@ -104,4 +106,49 @@ public:
   size_t size() const { return size_; }
 
   bool isEmpty() const { return size_ == 0; }
+
+  class Iterator {
+  private:
+    Node *current_;
+  public :
+    // Iterator traits
+    using iterator_category = std::forward_iterator_tag;
+    using value_type = ValueType;
+    using difference_type = std::ptrdiff_t;
+    using pointer = ValueType *;
+    using reference = ValueType &;
+
+    Iterator(Node *node) : current_(node) {}
+
+    reference operator*() const { return current_->value; }
+
+    pointer operator->() const { return &(current_->value); }
+
+    Iterator &operator++() {
+      if (current_ != nullptr) {
+        current_ = current_->next;
+      }
+      return *this;
+    }
+
+    Iterator operator++(int) {
+      Iterator temp = *this;
+      ++(*this);
+      return temp;
+    }
+
+    bool operator==(const Iterator &other) const {
+      return current_ == other.current_;
+    }
+
+    bool operator!=(const Iterator &other) const {
+      return current_ != other.current_;
+    }
+  };
+
+  // Begin iterator
+  Iterator begin() const { return Iterator(head_); }
+
+  // End iterator (one past the last element)
+  Iterator end() const { return Iterator(nullptr); }
 };
