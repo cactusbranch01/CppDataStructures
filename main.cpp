@@ -2,9 +2,9 @@
 // Created by Ben Roberts on 12/21/2022.
 //
 
-#include "chaining.cpp"
-#include "linked_list.cpp"
-#include "open_address.cpp"
+#include "chaining_vector_hash.h"
+#include "linked_list.h"
+#include "open_address_hash.cpp"
 #include "queue.h"
 #include "stack.h"
 #include <cassert>
@@ -15,7 +15,7 @@
 using namespace std;
 
 int testOpenAddressing(size_t testSize) {
-  OpenAddressTable<int, std::string> openHash;
+  OpenAddressHash<int, std::string> openHash;
   auto start = std::chrono::high_resolution_clock::now();
   for (size_t i = 0; i < testSize; ++i) {
     openHash.insert(i, "Value_" + std::to_string(i));
@@ -45,8 +45,8 @@ int testOpenAddressing(size_t testSize) {
   return 0;
 }
 
-int testChainingHash(size_t testSize) {
-  Chaining<int, std::string> chainingHash;
+int testChainingVectorHash(size_t testSize) {
+  ChainingVectorHash<int, std::string> chainingHash;
   auto start = std::chrono::high_resolution_clock::now();
   for (size_t i = 0; i < testSize; ++i) {
     chainingHash.insert(i, "Value_" + std::to_string(i));
@@ -116,7 +116,7 @@ int testLinkedList(size_t testSize) {
 
 int main() {
   testOpenAddressing(1'000'000);
-  testChainingHash(1'000'000);
+  testChainingVectorHash(1'000'000);
   testLinkedList(1'000'000);
   return 0;
 }

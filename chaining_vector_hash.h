@@ -1,5 +1,7 @@
 // Copyright Ben Roberts 2024
 
+#pragma once
+
 #include <functional>
 #include <iostream>
 #include <stdexcept>
@@ -9,7 +11,7 @@ using namespace std;
 
 template <typename KeyType, typename ValueType>
 
-class Chaining {
+class ChainingVectorHash {
 private:
   struct Entry {
     KeyType key;
@@ -39,7 +41,7 @@ private:
   }
 
 public:
-  explicit Chaining(size_t capacity = 8, float load_factor = 2.0f)
+  explicit ChainingVectorHash(size_t capacity = 8, float load_factor = 2.0f)
       : table_(capacity), num_elements_(0), load_factor_(load_factor) {}
 
   void insert(const KeyType &key, const ValueType &value) {

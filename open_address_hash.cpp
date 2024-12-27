@@ -9,7 +9,8 @@
 
 using namespace std;
 
-template <typename KeyType, typename ValueType> class OpenAddressTable {
+template <typename KeyType, typename ValueType>
+class OpenAddressHash {
 private:
   struct Entry {
     KeyType key;
@@ -40,7 +41,7 @@ private:
   }
 
 public:
-  explicit OpenAddressTable(size_t capacity = 8, float load_factor = 0.5)
+  explicit OpenAddressHash(size_t capacity = 8, float load_factor = 0.5)
       : table_(capacity), num_elements_(0), load_factor_(load_factor) {}
 
   void insert(const KeyType &key, const ValueType &value) {
