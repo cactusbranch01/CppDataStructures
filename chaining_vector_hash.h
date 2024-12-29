@@ -22,10 +22,8 @@ public:
     }
     size_t hash_index = hash(key);
     /* .push_back({key, value}) also works in this line with similar runtime
-    1. Emplace_back is a little faster when calling struct constructor vs
-    copying.
-    2. Copying is usually slower than constructing, and is worse for cache
-    locality.
+    - Emplace_back is slightly faster because copying is slower than
+    construction and worse for cache locality.
     */
     table_[hash_index].emplace_back(key, value);
     num_elements_++;
