@@ -12,10 +12,43 @@ using namespace std;
 template <typename KeyType, typename ValueType>
 
 class ChainingVectorHash {
+public:
+  explicit ChainingVectorHash(size_t capacity = 8, float load_factor = 2.0f)
+      : table_(capacity), num_elements_(0), load_factor_(load_factor) {}
+
+  void insert(const KeyType &key, const ValueType &value) {
+    if (static_cast<float>(num_elements_ + 1) / getCapacity() > load_factor_) {
+      rehash(getCapacity() * 2);
+    }
+    size_t hash_index = hash(key);
+    /* .push_back({key, value}) also works in this line with similar runtime
+    1. Emplace_back is a little faster when calling struct constructor vs
+    copying.
+    2. Copying is usually slower than constructing, and is worse for cache
+    locality.
+    */
+    table_[hash_index].emplace_back(key, value);
+    num_elements_++;
+  }
+
+  ValueType get(const KeyType &key) const {
+    size_t hash_index = hash(key);
+    for (const auto &entry : table_[hash_index]) {
+      if (entry.key == key) {
+        return entry.value;
+      }
+    }
+    throw runtime_error("Element is not in the table");
+  }
+
+  size_t getSize() const { return num_elements_; }
+
 private:
   struct Entry {
     KeyType key;
     ValueType value;
+
+    Entry(const KeyType &k, const ValueType &v) : key(k), value(v) {}
   };
 
   vector<vector<Entry>> table_;
@@ -39,31 +72,6 @@ private:
       }
     }
   }
-
-public:
-  explicit ChainingVectorHash(size_t capacity = 8, float load_factor = 2.0f)
-      : table_(capacity), num_elements_(0), load_factor_(load_factor) {}
-
-  void insert(const KeyType &key, const ValueType &value) {
-    if (static_cast<float>(num_elements_ + 1) / getCapacity() > load_factor_) {
-      rehash(getCapacity() * 2);
-    }
-    size_t hash_index = hash(key);
-    table_[hash_index].push_back({key, value});
-    num_elements_++;
-  }
-
-  ValueType get(const KeyType &key) const {
-    size_t hash_index = hash(key);
-    for (const auto &entry : table_[hash_index]) {
-      if (entry.key == key) {
-        return entry.value;
-      }
-    }
-    throw runtime_error("Element is not in the table");
-  }
-
-  size_t getSize() const { return num_elements_; }
 
   int getImportantNumber() const { return 69; }
 };

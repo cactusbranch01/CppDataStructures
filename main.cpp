@@ -2,84 +2,18 @@
 // Created by Ben Roberts on 12/21/2022.
 //
 
-#include "chaining_vector_hash.h"
-#include "linked_list.h"
-#include "open_address_hash.cpp"
 #include "queue.h"
 #include "stack.h"
+#include "linked_list.h"
+#include "open_address_hash.h"
+#include "chaining_vector_hash.h"
+#include "chaining_linked_hash.h"
 #include <cassert>
 #include <chrono>
 #include <iostream>
 #include <string>
 
 using namespace std;
-
-int testOpenAddressing(size_t testSize) {
-  OpenAddressHash<int, std::string> openHash;
-
-  // Insertion
-  auto start = std::chrono::high_resolution_clock::now();
-  for (size_t i = 0; i < testSize; ++i) {
-    openHash.insert(i, "Value_" + std::to_string(i));
-  }
-  auto insertEnd = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double> insertDuration = insertEnd - start;
-  std::cout << "Insertion of " << testSize
-            << " elements in an open address hashtable took "
-            << insertDuration.count() << " seconds.\n";
-
-  assert(openHash.getSize() == testSize &&
-         "Hash table size should match the number of inserted elements");
-
-  // Retrieval
-  auto retrieveStart = std::chrono::high_resolution_clock::now();
-  for (size_t i = 0; i < testSize; ++i) {
-    std::string expectedValue = "Value_" + std::to_string(i);
-    assert(openHash.get(i) == expectedValue &&
-           "Retrieved value should match the inserted value");
-  }
-  auto retrieveEnd = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double> retrieveDuration = retrieveEnd - retrieveStart;
-  std::cout << "Retrieval of " << testSize
-            << " elements in an open address hashtable took "
-            << retrieveDuration.count() << " seconds.\n";
-
-  std::cout << "All tests passed successfully." << std::endl;
-  return 0;
-}
-
-int testChainingVectorHash(size_t testSize) {
-  ChainingVectorHash<int, std::string> chainingHash;
-
-  // Insertion
-  auto start = std::chrono::high_resolution_clock::now();
-  for (size_t i = 0; i < testSize; ++i) {
-    chainingHash.insert(i, "Value_" + std::to_string(i));
-  }
-  auto insertEnd = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double> insertDuration = insertEnd - start;
-  std::cout << "Insertion of " << testSize
-            << " elements in a chaining hashtable took "
-            << insertDuration.count() << " seconds.\n";
-  assert(chainingHash.getSize() == testSize &&
-         "Hash table size should match the number of inserted elements");
-
-  // Retrieval
-  auto retrieveStart = std::chrono::high_resolution_clock::now();
-  for (size_t i = 0; i < testSize; ++i) {
-    std::string expectedValue = "Value_" + std::to_string(i);
-    assert(chainingHash.get(i) == expectedValue &&
-           "Retrieved value should match the inserted value");
-  }
-  auto retrieveEnd = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double> retrieveDuration = retrieveEnd - retrieveStart;
-  std::cout << "Retrieval of " << testSize
-            << " elements in a chaining hashtable took "
-            << retrieveDuration.count() << " seconds.\n";
-
-  std::cout << "All tests passed successfully." << std::endl;
-  return 0;
-}
 
 int testLinkedList(size_t testSize) {
   LinkedList<std::pair<int, std::string>> linkedList;
@@ -132,9 +66,110 @@ int testLinkedList(size_t testSize) {
   return 0;
 }
 
+int testOpenAddressing(size_t testSize) {
+  OpenAddressHash<int, std::string> openHash;
+
+  // Insertion
+  auto start = std::chrono::high_resolution_clock::now();
+  for (size_t i = 0; i < testSize; ++i) {
+    openHash.insert(i, "Value_" + std::to_string(i));
+  }
+  auto insertEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> insertDuration = insertEnd - start;
+  std::cout << "Insertion of " << testSize
+            << " elements in an open address hashtable took "
+            << insertDuration.count() << " seconds.\n";
+
+  assert(openHash.getSize() == testSize &&
+         "Hash table size should match the number of inserted elements");
+
+  // Retrieval
+  auto retrieveStart = std::chrono::high_resolution_clock::now();
+  for (size_t i = 0; i < testSize; ++i) {
+    std::string expectedValue = "Value_" + std::to_string(i);
+    assert(openHash.get(i) == expectedValue &&
+           "Retrieved value should match the inserted value");
+  }
+  auto retrieveEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> retrieveDuration = retrieveEnd - retrieveStart;
+  std::cout << "Retrieval of " << testSize
+            << " elements in an open address hashtable took "
+            << retrieveDuration.count() << " seconds.\n";
+
+  std::cout << "All tests passed successfully." << std::endl;
+  return 0;
+}
+
+int testChainingVectorHash(size_t testSize) {
+  ChainingVectorHash<int, std::string> chainingHash;
+
+  // Insertion
+  auto start = std::chrono::high_resolution_clock::now();
+  for (size_t i = 0; i < testSize; ++i) {
+    chainingHash.insert(i, "Value_" + std::to_string(i));
+  }
+  auto insertEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> insertDuration = insertEnd - start;
+  std::cout << "Insertion of " << testSize
+            << " elements in a vector chaining hashtable took "
+            << insertDuration.count() << " seconds.\n";
+  assert(chainingHash.getSize() == testSize &&
+         "Hash table size should match the number of inserted elements");
+
+  // Retrieval
+  auto retrieveStart = std::chrono::high_resolution_clock::now();
+  for (size_t i = 0; i < testSize; ++i) {
+    std::string expectedValue = "Value_" + std::to_string(i);
+    assert(chainingHash.get(i) == expectedValue &&
+           "Retrieved value should match the inserted value");
+  }
+  auto retrieveEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> retrieveDuration = retrieveEnd - retrieveStart;
+  std::cout << "Retrieval of " << testSize
+            << " elements in a vector chaining hashtable took "
+            << retrieveDuration.count() << " seconds.\n";
+
+  std::cout << "All tests passed successfully." << std::endl;
+  return 0;
+}
+
+int testChainingLinkedHash(size_t testSize) {
+  ChainingLinkedHash<int, std::string> chainingHash;
+
+  // Insertion
+  auto start = std::chrono::high_resolution_clock::now();
+  for (size_t i = 0; i < testSize; ++i) {
+    chainingHash.insert(i, "Value_" + std::to_string(i));
+  }
+  auto insertEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> insertDuration = insertEnd - start;
+  std::cout << "Insertion of " << testSize
+            << " elements in a linked list chaining hashtable took "
+            << insertDuration.count() << " seconds.\n";
+  assert(chainingHash.getSize() == testSize &&
+         "Hash table size should match the number of inserted elements");
+
+  // Retrieval
+  auto retrieveStart = std::chrono::high_resolution_clock::now();
+  for (size_t i = 0; i < testSize; ++i) {
+    std::string expectedValue = "Value_" + std::to_string(i);
+    assert(chainingHash.get(i) == expectedValue &&
+           "Retrieved value should match the inserted value");
+  }
+  auto retrieveEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> retrieveDuration = retrieveEnd - retrieveStart;
+  std::cout << "Retrieval of " << testSize
+            << " elements in a linked list chaining hashtable took "
+            << retrieveDuration.count() << " seconds.\n";
+
+  std::cout << "All tests passed successfully." << std::endl;
+  return 0;
+}
+
 int main() {
+  testLinkedList(1'000'000);
   testOpenAddressing(1'000'000);
   testChainingVectorHash(1'000'000);
-  testLinkedList(1'000'000);
+  testChainingLinkedHash(1'000'000);
   return 0;
 }

@@ -1,28 +1,36 @@
-//
-// Created by Ben Roberts on 12/22/2022.
-//
+// Copyright Ben Roberts 2024
 
 #pragma once
 
 #include <stdexcept>
+#include <vector>
+
 using namespace std;
 
-class Stack {
-  int *elements_;
-  int first_;
-  int last_;
-  int count_;
-  int max_;
+template <typename ValueType> class Stack {
+private:
+  vector<ValueType> elements_;
+  size_t size_;
+  size_t last_;
 
 public:
-  explicit Stack(int cap);
-  int getSize();
-  int getCap();
-  void push(int element);
-  int pop();
-  int peek();
-  bool isEmpty();
-  bool isFull();
-  bool contains(int element);
-  void removeAll();
+  Stack(size_t capacity = 16) : size_(0), last_(0), elements_(capacity) {}
+
+  size_t getSize() { return size_; }
+
+  void clear() {
+    size_ = 0;
+    last_ = 0;
+    elements_.clear();
+  }
+
+  void push(ValueType element) { elements_.push_back(element); }
+
+  ValueType peek() { return elements_[last_]; }
+
+  ValueType pop() {
+    ValueType last_element = elements_[last_];
+    elements_.pop_back();
+    return last_element;
+  }
 };
