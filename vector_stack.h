@@ -5,11 +5,9 @@
 #include <stdexcept>
 #include <vector>
 
-using namespace std;
-
 template <typename ValueType> class Stack {
 private:
-  vector<ValueType> elements_;
+  std::vector<ValueType> elements_;
   size_t size_;
 
 public:
@@ -31,7 +29,7 @@ public:
     if (getSize() == 0) {
       throw std::runtime_error("Cannot peek an empty list!");
     }
-    return elements_[size_ - 1]; 
+    return elements_[size_ - 1];
   }
 
   ValueType pop() {

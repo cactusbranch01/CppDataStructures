@@ -13,8 +13,6 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
-
 int testVectorStack(size_t testSize) {
   Stack<std::pair<int, std::string>> stack;
 

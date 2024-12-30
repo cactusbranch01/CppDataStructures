@@ -1,16 +1,13 @@
 // Copyright Ben Roberts 2024
 
-#define DEFAULT_CAPACITY 16
+#pragma once
 
 #include <functional>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
 
-using namespace std;
-
-template <typename KeyType, typename ValueType>
-class OpenAddressHash {
+template <typename KeyType, typename ValueType> class OpenAddressHash {
 private:
   struct Entry {
     KeyType key;
@@ -18,7 +15,7 @@ private:
     bool empty = true;
   };
 
-  vector<Entry> table_;
+  std::vector<Entry> table_;
   size_t num_elements_;
   float load_factor_;
 
@@ -30,7 +27,7 @@ private:
 
   void rehash(size_t newCapacity) {
     auto old_table = table_;
-    table_ = vector<Entry>(newCapacity);
+    table_ = std::vector<Entry>(newCapacity);
     num_elements_ = 0;
 
     for (const auto &entry : old_table) {
@@ -79,7 +76,7 @@ public:
       }
     }
 
-    throw runtime_error("Element is not in the table");
+    throw std::runtime_error("Element is not in the table");
   }
 
   size_t getSize() const { return num_elements_; }

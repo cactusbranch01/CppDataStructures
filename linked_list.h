@@ -8,26 +8,25 @@
 #include <iterator>
 #include <stdexcept>
 
-template <typename ValueType>
-class LinkedList {
- private:
+template <typename ValueType> class LinkedList {
+private:
   struct Node {
     ValueType value;
-    Node* next;
-    Node* prev;
+    Node *next;
+    Node *prev;
 
-    explicit Node(const ValueType& val)
+    explicit Node(const ValueType &val)
         : value(val), next(nullptr), prev(nullptr) {}
   };
 
-  Node* head_;
-  Node* tail_;
+  Node *head_;
+  Node *tail_;
   size_t size_;
 
   void clear() {
-    Node* current = head_;
+    Node *current = head_;
     while (current != nullptr) {
-      Node* tmp = current;
+      Node *tmp = current;
       current = current->next;
       delete tmp;
     }
@@ -35,11 +34,12 @@ class LinkedList {
     size_ = 0;
   }
 
- public:
+public:
   LinkedList() : head_(nullptr), tail_(nullptr), size_(0) {}
   ~LinkedList() { clear(); }
 
-  LinkedList(const LinkedList &other) : head_(nullptr), tail_(nullptr), size_(0) {
+  LinkedList(const LinkedList &other)
+      : head_(nullptr), tail_(nullptr), size_(0) {
     for (const auto &value : other) {
       pushBack(value);
     }
@@ -55,8 +55,8 @@ class LinkedList {
     return *this;
   }
 
-  void pushFront(const ValueType& value) {
-    Node* new_node = new Node(value);
+  void pushFront(const ValueType &value) {
+    Node *new_node = new Node(value);
     if (!head_) {
       head_ = tail_ = new_node;
     } else {
@@ -67,8 +67,8 @@ class LinkedList {
     ++size_;
   }
 
-  void pushBack(const ValueType& value) {
-    Node* new_node = new Node(value);
+  void pushBack(const ValueType &value) {
+    Node *new_node = new Node(value);
     if (!tail_) {
       head_ = tail_ = new_node;
     } else {
@@ -109,14 +109,14 @@ class LinkedList {
     --size_;
   }
 
-  ValueType& front() const {
+  ValueType &front() const {
     if (isEmpty()) {
       throw std::out_of_range("Cannot call front on an empty list!");
     }
     return head_->value;
   }
 
-  ValueType& back() const {
+  ValueType &back() const {
     if (isEmpty()) {
       throw std::out_of_range("Cannot call back on an empty list!");
     }
@@ -128,23 +128,23 @@ class LinkedList {
   bool isEmpty() const { return size_ == 0; }
 
   class Iterator {
-   private:
-    Node* current_;
+  private:
+    Node *current_;
 
-   public:
+  public:
     using iterator_category = std::forward_iterator_tag;
     using value_type = ValueType;
     using difference_type = std::ptrdiff_t;
-    using pointer = ValueType*;
-    using reference = ValueType&;
+    using pointer = ValueType *;
+    using reference = ValueType &;
 
-    explicit Iterator(Node* node) : current_(node) {}
+    explicit Iterator(Node *node) : current_(node) {}
 
     reference operator*() const { return current_->value; }
     pointer operator->() const { return &(current_->value); }
 
     // Prefix increment
-    Iterator& operator++() {
+    Iterator &operator++() {
       if (current_) {
         current_ = current_->next;
       }
@@ -158,10 +158,10 @@ class LinkedList {
       return temp;
     }
 
-    bool operator==(const Iterator& other) const {
+    bool operator==(const Iterator &other) const {
       return current_ == other.current_;
     }
-    bool operator!=(const Iterator& other) const {
+    bool operator!=(const Iterator &other) const {
       return current_ != other.current_;
     }
   };
