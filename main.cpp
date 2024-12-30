@@ -2,16 +2,16 @@
 // Created by Ben Roberts on 12/21/2022.
 //
 
-#include "vector_stack.h"
-#include "linked_list.h"
 #include "chaining_linked_hash.h"
 #include "chaining_vector_hash.h"
+#include "circular_vector_queue.h"
+#include "linked_list.h"
 #include "open_address_hash.h"
+#include "vector_stack.h"
 #include <cassert>
 #include <chrono>
 #include <iostream>
 #include <string>
-
 
 using namespace std;
 
@@ -55,6 +55,49 @@ int testVectorStack(size_t testSize) {
   assert(stack.getSize() == 0 &&
          "Stack should be empty after popping all elements");
   std::cout << "All vector stack tests passed successfully.\n";
+  return 0;
+}
+
+int testCircularVectorQueue(size_t testSize) {
+  CircularVectorQueue<std::pair<int, std::string>> queue;
+
+  // Insertion
+  auto insertStart = std::chrono::high_resolution_clock::now();
+  for (int i = 0; i < static_cast<int>(testSize); ++i) {
+    queue.push({i, "Value_" + std::to_string(i)});
+  }
+  auto insertEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> insertDuration = insertEnd - insertStart;
+  std::cout << "Insertion of " << testSize
+            << " elements in the vector queue took " << insertDuration.count()
+            << " seconds.\n";
+  assert(queue.getSize() == testSize &&
+         "Queue size should match the number of inserted elements");
+
+  // Peek
+  auto front = queue.peek();
+  assert(front.first == 0 &&
+         "Front element key should be the first inserted key");
+  assert(front.second == "Value_0" &&
+         "Front element value should be the first inserted value");
+
+  // Removal
+  auto removeStart = std::chrono::high_resolution_clock::now();
+  for (int i = 0; i < static_cast<int>(testSize); ++i) {
+    auto element = queue.pop();
+    assert(element.first == i &&
+           "Popped element key should match the expected key");
+    assert(element.second == "Value_" + std::to_string(i) &&
+           "Popped element value should match the expected value");
+  }
+  auto removeEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> removeDuration = removeEnd - removeStart;
+  std::cout << "Removal of " << testSize
+            << " elements from the vector queue took " << removeDuration.count()
+            << " seconds.\n";
+  assert(queue.getSize() == 0 &&
+         "Queue should be empty after popping all elements");
+  std::cout << "All vector queue tests passed successfully.\n";
   return 0;
 }
 
@@ -211,6 +254,7 @@ int testChainingLinkedHash(size_t testSize) {
 
 int main() {
   testVectorStack(1'000'000);
+  testCircularVectorQueue(1'000'000);
   testLinkedList(1'000'000);
   testOpenAddressing(1'000'000);
   testChainingVectorHash(1'000'000);

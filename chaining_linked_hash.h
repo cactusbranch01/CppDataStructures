@@ -2,46 +2,15 @@
 
 #include "linked_list.h"
 #include <stdexcept>
+#include <vector>
 
 using namespace std;
 
 template <typename KeyType, typename ValueType> class ChainingLinkedHash {
-public:
-  explicit ChainingLinkedHash(size_t capacity = 8, float load_factor = 2.0)
-      : table_(capacity), size_(0), load_factor_(load_factor) {}
-
-  void insert(const KeyType &key, const ValueType &value) {
-    if (static_cast<float>(size_ + 1) / getCapacity() > load_factor_) {
-      rehash(getCapacity() * 2);
-      /* The number of copies per element is an amortized constant cost.
-      For pushes N, we are copying at increments: 1->2, 2->4, 4->8...
-      Therefore, reallocation happens at 1,2,4,...,2^k for 2^k <= N < 2^k+1
-      Total copy cost is 1 + 2 + 4 + ... + 2^k = 2^k+1 - 1 <= 2N - 1
-      Finally, amortized cost is no greater than 2N - 1 / N < 2
-      */
-    }
-    size_t hash_index = hash(key);
-    table_[hash_index].pushBack({key, value});
-    size_++;
-  }
-
-  ValueType get(const KeyType &key) const {
-    size_t hash_index = hash(key);
-    for (const auto &entry : table_[hash_index]) {
-      if (entry.key == key) {
-        return entry.value;
-      }
-    }
-    throw runtime_error("Element is not in the table");
-  }
-
-  size_t getSize() { return size_; }
-
 private:
   struct Entry {
     KeyType key;
     ValueType value;
-
     Entry(const KeyType &k, const ValueType &v) : key(k), value(v) {}
   };
 
@@ -66,4 +35,34 @@ private:
       }
     }
   }
+
+public:
+  explicit ChainingLinkedHash(size_t capacity = 8, float load_factor = 2.0)
+      : table_(capacity), size_(0), load_factor_(load_factor) {}
+
+  void insert(const KeyType &key, const ValueType &value) {
+    if (static_cast<float>(size_ + 1) / getCapacity() > load_factor_) {
+      rehash(getCapacity() * 2);
+      /* The number of copies per element is an amortized constant cost.
+      For pushes N, we are copying at increments: 1->2, 2->4, 4->8...
+      Therefore, reallocation happens at 1,2,4,...,2^k for 2^k <= N < 2^k+1
+      Total copy cost is 1 + 2 + 4 + ... + 2^k = 2^k+1 - 1 <= 2N - 1
+      Finally, amortized cost is no greater than 2N - 1 / N < 2*/
+    }
+    size_t hash_index = hash(key);
+    table_[hash_index].pushBack({key, value});
+    size_++;
+  }
+
+  ValueType get(const KeyType &key) const {
+    size_t hash_index = hash(key);
+    for (const auto &entry : table_[hash_index]) {
+      if (entry.key == key) {
+        return entry.value;
+      }
+    }
+    throw runtime_error("Element is not in the table");
+  }
+
+  size_t getSize() { return size_; }
 };
