@@ -4,7 +4,6 @@ CFLAGS = -Wall -g -UNDEBUG -MMD -MP
 # The only source file
 SOURCES = main.cpp
 OBJECTS = main.o
-# Dependency files will be named main.d
 DEPENDS = $(OBJECTS:.o=.d)
 
 EXECUTABLE = main
