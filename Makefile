@@ -4,7 +4,7 @@ CFLAGS = -Wall -g -UNDEBUG
 
 # Source, header, and object files
 SOURCES = main.cpp queue.cpp
-HEADERS = queue.h stack.h linked_list.h stack.h chaining_vector_hash.h chaining_linked_hash.h open_address_hash.h
+HEADERS = queue.h vector_stack.h linked_list.h stack.h chaining_vector_hash.h chaining_linked_hash.h open_address_hash.h
 OBJECTS = $(SOURCES:.cpp=.o)
 
 # Executable name

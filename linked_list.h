@@ -81,7 +81,7 @@ class LinkedList {
 
   void popFront() {
     if (isEmpty()) {
-      throw std::runtime_error("Cannot popFront() on an empty list!");
+      throw std::runtime_error("Cannot pop on an empty list!");
     }
     auto temp = head_;
     head_ = head_->next;
@@ -96,7 +96,7 @@ class LinkedList {
 
   void popBack() {
     if (isEmpty()) {
-      throw std::runtime_error("Cannot popBack() on an empty list!");
+      throw std::runtime_error("Cannot pop on an empty list!");
     }
     auto temp = tail_;
     tail_ = tail_->prev;
@@ -111,14 +111,14 @@ class LinkedList {
 
   ValueType& front() const {
     if (isEmpty()) {
-      throw std::out_of_range("Cannot call front() on an empty list!");
+      throw std::out_of_range("Cannot call front on an empty list!");
     }
     return head_->value;
   }
 
   ValueType& back() const {
     if (isEmpty()) {
-      throw std::out_of_range("Cannot call back() on an empty list!");
+      throw std::out_of_range("Cannot call back on an empty list!");
     }
     return tail_->value;
   }

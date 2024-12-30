@@ -2,18 +2,61 @@
 // Created by Ben Roberts on 12/21/2022.
 //
 
-#include "queue.h"
-#include "stack.h"
+#include "vector_stack.h"
 #include "linked_list.h"
-#include "open_address_hash.h"
-#include "chaining_vector_hash.h"
 #include "chaining_linked_hash.h"
+#include "chaining_vector_hash.h"
+#include "open_address_hash.h"
 #include <cassert>
 #include <chrono>
 #include <iostream>
 #include <string>
 
+
 using namespace std;
+
+int testVectorStack(size_t testSize) {
+  Stack<std::pair<int, std::string>> stack;
+
+  // Insertion
+  auto insertStart = std::chrono::high_resolution_clock::now();
+  for (int i = 0; i < static_cast<int>(testSize); ++i) {
+    stack.push({i, "Value_" + std::to_string(i)});
+  }
+  auto insertEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> insertDuration = insertEnd - insertStart;
+  std::cout << "Insertion of " << testSize
+            << " elements in the vector stack took " << insertDuration.count()
+            << " seconds.\n";
+  assert(stack.getSize() == testSize &&
+         "Stack size should match the number of inserted elements");
+
+  // Peek at the top element
+  auto top = stack.peek();
+  assert(top.first == static_cast<int>(testSize - 1) &&
+         "Top element key should be the last inserted key");
+  assert(top.second == "Value_" + std::to_string(testSize - 1) &&
+         "Top element value should be the last inserted value");
+
+  // Removal
+  auto removeStart = std::chrono::high_resolution_clock::now();
+  for (int i = static_cast<int>(testSize) - 1; i >= 0; --i) {
+    auto element = stack.pop();
+    assert(element.first == i &&
+           "Popped element key should match the expected key");
+    assert(element.second == "Value_" + std::to_string(i) &&
+           "Popped element value should match the expected value");
+  }
+  auto removeEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> removeDuration = removeEnd - removeStart;
+  std::cout << "Removal of " << testSize
+            << " elements from the vector stack took " << removeDuration.count()
+            << " seconds.\n";
+  assert(stack.getSize() == 0 &&
+         "Stack should be empty after popping all elements");
+  std::cout << "All vector stack tests passed successfully.\n";
+  return 0;
+}
 
 int testLinkedList(size_t testSize) {
   LinkedList<std::pair<int, std::string>> linkedList;
@@ -167,6 +210,7 @@ int testChainingLinkedHash(size_t testSize) {
 }
 
 int main() {
+  testVectorStack(1'000'000);
   testLinkedList(1'000'000);
   testOpenAddressing(1'000'000);
   testChainingVectorHash(1'000'000);
