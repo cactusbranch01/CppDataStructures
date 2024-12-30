@@ -12,7 +12,13 @@ public:
 
   void insert(const KeyType &key, const ValueType &value) {
     if (static_cast<float>(size_ + 1) / getCapacity() > load_factor_) {
-      rehash();
+      rehash(getCapacity() * 2);
+      /* The number of copies per element is an amortized constant cost.
+      For pushes N, we are copying at increments: 1->2, 2->4, 4->8...
+      Therefore, reallocation happens at 1,2,4,...,2^k for 2^k <= N < 2^k+1
+      Total copy cost is 1 + 2 + 4 + ... + 2^k = 2^k+1 - 1 <= 2N - 1
+      Finally, amortized cost is no greater than 2N - 1 / N < 2
+      */
     }
     size_t hash_index = hash(key);
     table_[hash_index].pushBack({key, value});
@@ -49,9 +55,9 @@ private:
     return std::hash<KeyType>{}(key) % getCapacity();
   }
 
-  void rehash() {
+  void rehash(size_t new_capacity) {
     auto old_table = table_;
-    table_ = vector<LinkedList<Entry>>(getCapacity() * 2);
+    table_ = vector<LinkedList<Entry>>(new_capacity);
     size_ = 0;
 
     for (const auto &list : old_table) {
