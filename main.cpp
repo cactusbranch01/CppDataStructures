@@ -13,7 +13,7 @@
 #include <iostream>
 #include <string>
 
-int testVectorStack(size_t testSize) {
+void testVectorStack(size_t testSize) {
   Stack<std::pair<int, std::string>> stack;
 
   // Insertion
@@ -53,10 +53,9 @@ int testVectorStack(size_t testSize) {
   assert(stack.getSize() == 0 &&
          "Stack should be empty after popping all elements");
   std::cout << "All vector stack tests passed successfully.\n";
-  return 0;
 }
 
-int testCircularVectorQueue(size_t testSize) {
+void testCircularVectorQueue(size_t testSize) {
   CircularVectorQueue<std::pair<int, std::string>> queue;
 
   // Insertion
@@ -96,10 +95,9 @@ int testCircularVectorQueue(size_t testSize) {
   assert(queue.getSize() == 0 &&
          "Queue should be empty after popping all elements");
   std::cout << "All vector queue tests passed successfully.\n";
-  return 0;
 }
 
-int testLinkedList(size_t testSize) {
+void testLinkedList(size_t testSize) {
   LinkedList<std::pair<int, std::string>> linkedList;
 
   // Insertion
@@ -147,10 +145,9 @@ int testLinkedList(size_t testSize) {
   assert(linkedList.isEmpty() &&
          "Linked list should be empty after popping all elements");
   std::cout << "All tests passed successfully.\n";
-  return 0;
 }
 
-int testOpenAddressing(size_t testSize) {
+void testOpenAddressing(size_t testSize) {
   OpenAddressHash<int, std::string> openHash;
 
   // Insertion
@@ -179,12 +176,10 @@ int testOpenAddressing(size_t testSize) {
   std::cout << "Retrieval of " << testSize
             << " elements in an open address hashtable took "
             << retrieveDuration.count() << " seconds.\n";
-
   std::cout << "All tests passed successfully." << std::endl;
-  return 0;
 }
 
-int testChainingVectorHash(size_t testSize) {
+void testChainingVectorHash(size_t testSize) {
   ChainingVectorHash<int, std::string> chainingHash;
 
   // Insertion
@@ -212,12 +207,10 @@ int testChainingVectorHash(size_t testSize) {
   std::cout << "Retrieval of " << testSize
             << " elements in a vector chaining hashtable took "
             << retrieveDuration.count() << " seconds.\n";
-
   std::cout << "All tests passed successfully." << std::endl;
-  return 0;
 }
 
-int testChainingLinkedHash(size_t testSize) {
+void testChainingLinkedHash(size_t testSize) {
   ChainingLinkedHash<int, std::string> chainingHash;
 
   // Insertion
@@ -245,9 +238,7 @@ int testChainingLinkedHash(size_t testSize) {
   std::cout << "Retrieval of " << testSize
             << " elements in a linked list chaining hashtable took "
             << retrieveDuration.count() << " seconds.\n";
-
   std::cout << "All tests passed successfully." << std::endl;
-  return 0;
 }
 
 int main() {

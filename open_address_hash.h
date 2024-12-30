@@ -2,10 +2,9 @@
 
 #pragma once
 
-#include <functional>
-#include <iostream>
-#include <stdexcept>
-#include <vector>
+#include <functional> // For std::hash
+#include <stdexcept>  // For std::exception
+#include <vector>     // For std::vector
 
 template <typename KeyType, typename ValueType> class OpenAddressHash {
 private:

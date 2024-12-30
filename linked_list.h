@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include <cstddef>
-#include <iterator>
-#include <stdexcept>
+#include <cstddef>    // For std::ptrdiff_t
+#include <iterator>   // For std::forward_iterator_tag
+#include <stdexcept>  // For std::exception
 
 template <typename ValueType> class LinkedList {
 private:

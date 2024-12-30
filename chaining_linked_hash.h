@@ -7,7 +7,6 @@
 #include <stdexcept>     // For std::exception
 #include <vector>        // For std::vector
 
-
 template <typename KeyType, typename ValueType> class ChainingLinkedHash {
 private:
   struct Entry {
@@ -49,7 +48,7 @@ public:
       For pushes N, we are copying at increments: 1->2, 2->4, 4->8...
       Therefore, reallocation happens at 1,2,4,...,2^k for 2^k <= N < 2^k+1
       Total copy cost is 1 + 2 + 4 + ... + 2^k = 2^k+1 - 1 <= 2N - 1
-      Finally, amortized cost is no greater than 2N - 1 / N < 2
+      Finally, amortized cost is no greater than 2N - 1 / N < 2 per insert
       */
     }
     size_t hash_index = hash(key);

@@ -3,9 +3,8 @@
 #pragma once
 
 #include <functional> // For std::hash
-#include <stdexcept>
-#include <vector>
-
+#include <stdexcept>  // For std::exception
+#include <vector>     // For std::vector
 
 template <typename KeyType, typename ValueType> class ChainingVectorHash {
 private:

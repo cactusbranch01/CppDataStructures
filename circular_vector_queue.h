@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include <cassert>
-#include <stdexcept>
-#include <vector>
+#include <cassert>    // For asserts
+#include <stdexcept>  // For std::exception
+#include <vector>     // For std::vector
 
 template <typename ValueType> class CircularVectorQueue {
 private:

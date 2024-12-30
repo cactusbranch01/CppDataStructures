@@ -1,26 +1,25 @@
-# Compiler and compiler flags
 CC = g++
-CFLAGS = -Wall -g -UNDEBUG
+CFLAGS = -Wall -g -UNDEBUG -MMD -MP
 
-# Source, header, and object files
+# The only source file
 SOURCES = main.cpp
-HEADERS = vector_stack.h linked_list.h stack.h chaining_vector_hash.h chaining_linked_hash.h open_address_hash.h
-OBJECTS = $(SOURCES:.cpp=.o)
+OBJECTS = main.o
+# Dependency files will be named main.d
+DEPENDS = $(OBJECTS:.o=.d)
 
-# Executable name
 EXECUTABLE = main
 
-# Default target
 all: $(EXECUTABLE)
 
-# Link object files to create the executable
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(CFLAGS) -o $@ $(OBJECTS)
 
-# Compile .cpp files into .o files
-%.o: %.cpp $(HEADERS)
+# Compile main.cpp into main.o, generating a .d file tracking headers
+main.o: main.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Clean up generated files
+# Include the generated .d file if it exists
+-include $(DEPENDS)
+
 clean:
-	rm -f $(OBJECTS) $(EXECUTABLE)
+	rm -f $(OBJECTS) $(DEPENDS) $(EXECUTABLE)

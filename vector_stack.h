@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include <stdexcept>
-#include <vector>
+#include <stdexcept>  // For std::exception
+#include <vector>     // For std::vector
 
 template <typename ValueType> class Stack {
 private:
