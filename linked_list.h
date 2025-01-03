@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include <cstddef>    // For std::ptrdiff_t
-#include <iterator>   // For std::forward_iterator_tag
-#include <stdexcept>  // For std::exception
+#include <cstddef>   // For std::ptrdiff_t
+#include <iterator>  // For std::forward_iterator_tag
+#include <stdexcept> // For std::exception
 
 template <typename ValueType> class LinkedList {
 private:
@@ -36,6 +36,7 @@ private:
 
 public:
   LinkedList() : head_(nullptr), tail_(nullptr), size_(0) {}
+
   ~LinkedList() { clear(); }
 
   LinkedList(const LinkedList &other)
@@ -166,8 +167,8 @@ public:
     }
   };
 
-  /// Returns an iterator to the first element of the list.
+  // Returns an iterator to the first element of the list.
   Iterator begin() const { return Iterator(head_); }
-  /// Returns an iterator to one past the last element of the list.
+  // Returns an iterator to one past the last element of the list.
   Iterator end() const { return Iterator(nullptr); }
 };

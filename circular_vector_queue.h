@@ -4,11 +4,12 @@
 
 #include <cassert>    // For asserts
 #include <stdexcept>  // For std::exception
-#include <vector>     // For std::vector
+#include <vector>     // For Vector
+#include "vector.h"   // For Vector
 
 template <typename ValueType> class CircularVectorQueue {
 private:
-  std::vector<ValueType> elements_;
+  Vector<ValueType> elements_;
   size_t capacity_;
   size_t size_;
   size_t front_;
@@ -17,7 +18,7 @@ private:
   void resize(size_t new_capacity) {
     assert(capacity_ != 0);
     auto old_elements = elements_;
-    elements_ = std::vector<ValueType>(new_capacity);
+    elements_ = Vector<ValueType>(new_capacity);
     for (size_t i = 0; i < size_; i++) {
       elements_[i] = old_elements[(i + front_) % capacity_];
     }
@@ -48,7 +49,7 @@ public:
     return elements_[front_];
   }
 
-  ValueType pop() {
+  ValueType popFront() {
     if (getSize() == 0) {
       throw std::runtime_error("Cannot pop an empty queue");
     }

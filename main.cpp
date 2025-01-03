@@ -5,13 +5,54 @@
 #include "chaining_linked_hash.h"
 #include "chaining_vector_hash.h"
 #include "circular_vector_queue.h"
+#include "linked_dequeue.h"
 #include "linked_list.h"
 #include "open_address_hash.h"
+#include "vector.h"
 #include "vector_stack.h"
 #include <cassert>
 #include <chrono>
 #include <iostream>
 #include <string>
+
+void testVector(size_t testSize) {
+  Vector<int> vec;
+
+  // Insertion
+  auto insertStart = std::chrono::high_resolution_clock::now();
+  for (int i = 0; i < static_cast<int>(testSize); i++) {
+    vec.push_back(i);
+  }
+  auto insertEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> insertDuration = insertEnd - insertStart;
+  std::cout << "Insertion of " << testSize << " elements in the vector took "
+            << insertDuration.count() << " seconds.\n";
+  assert(vec.size() == testSize &&
+         "Vector size should match the number of inserted elements");
+
+  // Retrieval using Iterator
+  auto retrieveStart = std::chrono::high_resolution_clock::now();
+  size_t index = 0;
+  for (const auto &value : vec) {
+    assert(value == static_cast<int>(index) &&
+           "Retrieved value should match the inserted value");
+    ++index;
+  }
+  auto retrieveEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> retrieveDuration = retrieveEnd - retrieveStart;
+  std::cout << "Retrieval of " << testSize
+            << " elements in the vector using iterator took "
+            << retrieveDuration.count() << " seconds.\n";
+
+  // Additional Tests: front() and back()
+  if (testSize > 0) {
+    assert(vec.front() == 0 &&
+           "Front element should be the first inserted value");
+    assert(vec.back() == static_cast<int>(testSize - 1) &&
+           "Back element should be the last inserted value");
+  }
+  std::cout << "All vector tests passed successfully.\n";
+}
 
 void testVectorStack(size_t testSize) {
   Stack<std::pair<int, std::string>> stack;
@@ -81,7 +122,7 @@ void testCircularVectorQueue(size_t testSize) {
   // Removal
   auto removeStart = std::chrono::high_resolution_clock::now();
   for (int i = 0; i < static_cast<int>(testSize); ++i) {
-    auto element = queue.pop();
+    auto element = queue.popFront();
     assert(element.first == i &&
            "Popped element key should match the expected key");
     assert(element.second == "Value_" + std::to_string(i) &&
@@ -160,7 +201,7 @@ void testOpenAddressing(size_t testSize) {
   std::cout << "Insertion of " << testSize
             << " elements in an open address hashtable took "
             << insertDuration.count() << " seconds.\n";
-
+  std::cout << "Size of open hash is: " << openHash.getSize() << std::endl;
   assert(openHash.getSize() == testSize &&
          "Hash table size should match the number of inserted elements");
 
@@ -242,6 +283,7 @@ void testChainingLinkedHash(size_t testSize) {
 }
 
 int main() {
+  testVector(1'000'000);
   testVectorStack(1'000'000);
   testCircularVectorQueue(1'000'000);
   testLinkedList(1'000'000);

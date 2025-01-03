@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "vector.h"   // For Vector
 #include <functional> // For std::hash
 #include <stdexcept>  // For std::exception
 #include <vector>     // For std::vector
@@ -14,19 +15,19 @@ private:
     bool empty = true;
   };
 
-  std::vector<Entry> table_;
+  Vector<Entry> table_;
   size_t num_elements_;
   float load_factor_;
 
-  size_t getCapacity() const { return table_.size(); }
+  size_t getCapacity() const { return table_.capacity(); }
 
   size_t standardHash(const KeyType &key) const {
-    return std::hash<KeyType>{}(key) % table_.size();
+    return std::hash<KeyType>{}(key) % getCapacity();
   }
 
   void rehash(size_t newCapacity) {
     auto old_table = table_;
-    table_ = std::vector<Entry>(newCapacity);
+    table_ = Vector<Entry>(newCapacity);
     num_elements_ = 0;
 
     for (const auto &entry : old_table) {

@@ -4,7 +4,8 @@
 
 #include <functional> // For std::hash
 #include <stdexcept>  // For std::exception
-#include <vector>     // For std::vector
+#include <vector>     // For Vector
+#include "vector.h"   // For Vector
 
 template <typename KeyType, typename ValueType> class ChainingVectorHash {
 private:
@@ -12,10 +13,11 @@ private:
     KeyType key;
     ValueType value;
 
+    Entry() = default; // Default constructor
     Entry(const KeyType &k, const ValueType &v) : key(k), value(v) {}
   };
 
-  std::vector<std::vector<Entry>> table_;
+  Vector<Vector<Entry>> table_;
   size_t num_elements_;
   float load_factor_;
 
@@ -27,7 +29,7 @@ private:
 
   void rehash(size_t newCapacity) {
     auto old_table = table_;
-    table_ = std::vector<std::vector<Entry>>(newCapacity);
+    table_ = Vector<Vector<Entry>>(newCapacity);
     num_elements_ = 0;
 
     for (const auto &vec : old_table) {
@@ -49,10 +51,10 @@ public:
     }
     size_t hash_index = hash(key);
     /* .push_back({key, value}) also works in this line with similar runtime
-    - Emplace_back is slightly faster because copying is slower than
+    - emplace_back is slightly faster because copying is slower than
     construction and worse for cache locality.
     */
-    table_[hash_index].emplace_back(key, value);
+    table_[hash_index].push_back({key, value});
     num_elements_++;
   }
 

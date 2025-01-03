@@ -2,43 +2,39 @@
 
 #pragma once
 
-#include <stdexcept>  // For std::exception
-#include <vector>     // For std::vector
+#include "vector.h"  // For Vector
+#include <stdexcept> // For std::exception
 
 template <typename ValueType> class Stack {
 private:
-  std::vector<ValueType> elements_;
-  size_t size_;
+  Vector<ValueType> elements_;
 
 public:
-  Stack() : elements_(0), size_(0) {}
+  Stack() : elements_(0) {}
 
-  size_t getSize() { return size_; }
+  size_t getSize() const { return elements_.size(); }
 
   void clear() {
-    size_ = 0;
     elements_.clear();
   }
 
   void push(ValueType element) {
     elements_.push_back(element);
-    size_++;
   }
 
   ValueType peek() {
-    if (getSize() == 0) {
+    if (elements_.empty()) {
       throw std::runtime_error("Cannot peek an empty list!");
     }
-    return elements_[size_ - 1];
+    return elements_.back();
   }
 
   ValueType pop() {
-    if (getSize() == 0) {
+    if (elements_.empty()) {
       throw std::runtime_error("Cannot pop an empty list!");
     }
-    ValueType last_element = elements_[size_ - 1];
+    ValueType last_element = elements_.back();
     elements_.pop_back();
-    size_--;
     return last_element;
   }
 };
