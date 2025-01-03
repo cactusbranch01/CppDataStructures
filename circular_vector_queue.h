@@ -4,7 +4,6 @@
 
 #include <cassert>    // For asserts
 #include <stdexcept>  // For std::exception
-#include <vector>     // For Vector
 #include "vector.h"   // For Vector
 
 template <typename ValueType> class CircularVectorQueue {

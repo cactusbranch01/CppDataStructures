@@ -4,7 +4,6 @@
 
 #include <functional> // For std::hash
 #include <stdexcept>  // For std::exception
-#include <vector>     // For Vector
 #include "vector.h"   // For Vector
 
 template <typename KeyType, typename ValueType> class ChainingVectorHash {
