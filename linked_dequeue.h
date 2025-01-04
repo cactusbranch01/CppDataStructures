@@ -2,16 +2,15 @@
 
 #pragma once
 
-#include "linked_list.h"
-#include <stdexcept>
+#include "linked_list.h"  // For linked lists
+#include <cassert>        // For assert
 
 template <typename ValueType> class LinkedDequeue {
 private:
   LinkedList<ValueType> *linked_list_;
+
 public:
-  LinkedDequeue() {
-    linked_list_ = new LinkedList<ValueType>();
-  }
+  LinkedDequeue() { linked_list_ = new LinkedList<ValueType>(); }
 
   ~LinkedDequeue() {
     linked_list_.clear();
@@ -23,24 +22,16 @@ public:
   size_t size() { return linked_list_.size(); }
 
   ValueType popLeft() {
-    if (isEmpty()) {
-      throw std::runtime_error("Cannot popleft from an empty deque!");
-    }
+    assert(!isEmpty());
     return linked_list_.popFront();
   }
 
   ValueType popRight() {
-    if (isEmpty()) {
-      throw std::runtime_error("Cannot pop from an empty dequeue dequeue!");
-    }
+    assert(!isEmpty());
     return linked_list_.popBack();
   }
 
-  void pushLeft(const ValueType& val) {
-    linked_list_.pushFront(val);
-  }
+  void pushLeft(const ValueType &val) { linked_list_.pushFront(val); }
 
-  void pushRight(const ValueType& val) {
-    linked_list_.pushLeft(val);
-  }
+  void pushRight(const ValueType &val) { linked_list_.pushLeft(val); }
 };

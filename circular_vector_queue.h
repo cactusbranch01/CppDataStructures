@@ -32,6 +32,8 @@ public:
 
   size_t getSize() { return size_; }
 
+  bool isEmpty() { return size_ == 0; }
+
   void push(ValueType element) {
     if (size_ + 1 > capacity_) {
       resize(capacity_ * 2);
@@ -42,16 +44,12 @@ public:
   }
 
   ValueType peek() {
-    if (getSize() == 0) {
-      throw std::runtime_error("Cannot peek an empty queue");
-    }
+    assert(!isEmpty());
     return elements_[front_];
   }
 
   ValueType popFront() {
-    if (getSize() == 0) {
-      throw std::runtime_error("Cannot pop an empty queue");
-    }
+    assert(!isEmpty());
     size_--;
     ValueType first = elements_[front_];
     front_ = (front_ + 1) % capacity_;
