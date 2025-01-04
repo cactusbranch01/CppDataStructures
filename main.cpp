@@ -201,7 +201,6 @@ void testOpenAddressing(size_t testSize) {
   std::cout << "Insertion of " << testSize
             << " elements in an open address hashtable took "
             << insertDuration.count() << " seconds.\n";
-  std::cout << "Size of open hash is: " << openHash.getSize() << std::endl;
   assert(openHash.getSize() == testSize &&
          "Hash table size should match the number of inserted elements");
 

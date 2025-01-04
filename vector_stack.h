@@ -3,16 +3,18 @@
 #pragma once
 
 #include "vector.h"  // For Vector
-#include <stdexcept> // For std::exception
+#include <cassert>   // For assert
 
 template <typename ValueType> class Stack {
 private:
   Vector<ValueType> elements_;
 
 public:
-  Stack() : elements_(0) {}
+  Stack() : elements_() {}
 
   size_t getSize() const { return elements_.size(); }
+
+  bool isEmpty() { return getSize() == 0; }
 
   void clear() {
     elements_.clear();
@@ -23,16 +25,12 @@ public:
   }
 
   ValueType peek() {
-    if (elements_.empty()) {
-      throw std::runtime_error("Cannot peek an empty list!");
-    }
+    assert(!isEmpty());
     return elements_.back();
   }
 
   ValueType pop() {
-    if (elements_.empty()) {
-      throw std::runtime_error("Cannot pop an empty list!");
-    }
+    assert(!isEmpty());
     ValueType last_element = elements_.back();
     elements_.pop_back();
     return last_element;
