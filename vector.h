@@ -13,7 +13,7 @@ private:
   void reserve(size_t new_cap) {
     if (new_cap > capacity()) {
       ValueType *new_data = new ValueType[new_cap];
-      for (size_t i = 0; i < size_; ++i) {
+      for (size_t i = 0; i < capacity_; ++i) {
         new_data[i] = std::move(array_[i]);
       }
       delete[] array_;

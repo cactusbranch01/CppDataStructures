@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include "vector.h"   // For Vector
 #include <functional> // For std::hash
 #include <stdexcept>  // For std::exception
-#include "vector.h"   // For Vector
 
 template <typename KeyType, typename ValueType> class ChainingVectorHash {
 private:
