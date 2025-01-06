@@ -11,13 +11,17 @@ private:
   ValueType *array_;
 
 public:
-  // Constructors
+  // Default constructor
   Vector() : capacity_(0), size_(0), array_(nullptr) {}
 
+  // Overload constructor
   explicit Vector(size_t initial_capacity)
       : capacity_(initial_capacity), size_(initial_capacity), array_(nullptr) {
     if (capacity_ > 0) {
       array_ = new ValueType[capacity_];
+      for (size_t i = 0; i < size_; ++i) {
+        array_[i] = ValueType();
+      }
     }
   }
 
@@ -58,7 +62,7 @@ public:
     if (this != &other) {
       // If allocated capacity is smaller than other's size, re-allocate
       if (capacity_ < other.size_) {
-        delete[] array_;
+        clear();
         array_ = new ValueType[other.capacity_];
         capacity_ = other.capacity_;
       }
@@ -74,7 +78,7 @@ public:
   // Move assignment
   Vector &operator=(Vector &&other) noexcept {
     if (this != &other) {
-      delete[] array_;
+      clear();
       capacity_ = other.capacity_;
       size_ = other.size_;
       array_ = other.array_;
@@ -86,10 +90,18 @@ public:
     return *this;
   }
 
-  // Destructor
-  ~Vector() { delete[] array_; }
+  // Clear vector container
+  void clear() {
+    for (size_t i = 0; i < size_; ++i) {
+      array_[i].~ValueType();
+    }
+    size_ = 0;
+  }
 
-  void clear() { size_ = 0; }
+  // Destructor
+  ~Vector() {
+    clear();
+  }
 
   size_t capacity() const noexcept { return capacity_; }
 
@@ -132,7 +144,7 @@ public:
   void reserve(size_t new_cap) {
     if (new_cap > capacity_) {
       ValueType *new_data = new ValueType[new_cap];
-      for (size_t i = 0; i < capacity_; ++i) {
+      for (size_t i = 0; i < size_; ++i) {
         new_data[i] = std::move(array_[i]);
       }
       delete[] array_;
@@ -143,7 +155,7 @@ public:
 
   void resize(size_t count) {
     if (count < size_) {
-      for (size_t i = size_; i < count; i++) {
+      for (size_t i = count; i < size_; i++) {
         array_[i].~ValueType();
       }
       size_ = count;
@@ -169,7 +181,7 @@ public:
         reserve(count);
       }
       for (size_t i = size_; i < count; i++) {
-        array_[i] = std::copy(value);
+        array_[i] = value;
       }
       size_ = count;
     }
