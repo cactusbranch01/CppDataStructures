@@ -17,7 +17,7 @@ private:
     assert(capacity_ != 0);
     auto old_elements = elements_;
     elements_ = Vector<ValueType>(new_capacity);
-    for (size_t i = 0; i < size_; i++) {
+    for (size_t i = 0; i < size_; ++i) {
       elements_[i] = old_elements[(i + front_) % capacity_];
     }
     capacity_ = new_capacity;
@@ -39,7 +39,7 @@ public:
     }
     elements_[back_] = element;
     back_ = (back_ + 1) % capacity_;
-    size_++;
+    ++size_;
   }
 
   ValueType peek() {

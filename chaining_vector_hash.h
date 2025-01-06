@@ -54,7 +54,7 @@ public:
     construction and worse for cache locality.
     */
     table_[hash_index].push_back({key, value});
-    num_elements_++;
+    ++num_elements_;
   }
 
   ValueType get(const KeyType &key) const {

@@ -53,7 +53,7 @@ public:
     }
     size_t hash_index = hash(key);
     table_[hash_index].pushBack({key, value});
-    size_++;
+    ++size_;
   }
 
   ValueType get(const KeyType &key) const {

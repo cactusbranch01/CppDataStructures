@@ -20,7 +20,7 @@ void testVector(size_t testSize) {
 
   // Insertion
   auto insertStart = std::chrono::high_resolution_clock::now();
-  for (int i = 0; i < static_cast<int>(testSize); i++) {
+  for (int i = 0; i < static_cast<int>(testSize); ++i) {
     vec.push_back(i);
   }
   auto insertEnd = std::chrono::high_resolution_clock::now();

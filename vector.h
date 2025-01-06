@@ -41,7 +41,7 @@ public:
   Vector(const Vector &other) : capacity_(other.capacity_), size_(other.size_) {
     if (capacity_ > 0) {
       array_ = new ValueType[capacity_];
-      for (size_t i = 0; i < size_; i++) {
+      for (size_t i = 0; i < size_; ++i) {
         array_[i] = other.array_[i];
       }
     } else {
@@ -155,7 +155,7 @@ public:
 
   void resize(size_t count) {
     if (count < size_) {
-      for (size_t i = count; i < size_; i++) {
+      for (size_t i = count; i < size_; ++i) {
         array_[i].~ValueType();
       }
       size_ = count;
@@ -163,7 +163,7 @@ public:
       if (count > capacity_) {
         reserve(count);
       }
-      for (size_t i = size_; i < count; i++) {
+      for (size_t i = size_; i < count; ++i) {
         array_[i] = ValueType();
       }
       size_ = count;
@@ -172,7 +172,7 @@ public:
 
   void resize(size_t count, const ValueType &value) {
     if (count < size_) {
-      for (size_t i = size_; i < count; i++) {
+      for (size_t i = size_; i < count; ++i) {
         array_[i].~ValueType();
       }
       size_ = count;
@@ -180,7 +180,7 @@ public:
       if (count > capacity_) {
         reserve(count);
       }
-      for (size_t i = size_; i < count; i++) {
+      for (size_t i = size_; i < count; ++i) {
         array_[i] = value;
       }
       size_ = count;
