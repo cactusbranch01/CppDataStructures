@@ -19,10 +19,10 @@ private:
   size_t size_;
   float load_factor_;
 
-  size_t getCapacity() const { return table_.size(); }
+  size_t capacity() const { return table_.size(); }
 
   size_t hash(const KeyType &key) const {
-    return std::hash<KeyType>{}(key) % getCapacity();
+    return std::hash<KeyType>{}(key) % capacity();
   }
 
   void rehash(size_t new_capacity) {
@@ -42,8 +42,8 @@ public:
       : table_(capacity), size_(0), load_factor_(load_factor) {}
 
   void insert(const KeyType &key, const ValueType &value) {
-    if (static_cast<float>(size_ + 1) / getCapacity() > load_factor_) {
-      rehash(getCapacity() * 2);
+    if (static_cast<float>(size_ + 1) / capacity() > load_factor_) {
+      rehash(capacity() * 2);
       /* The number of copies per element is an amortized constant cost.
       For pushes N, we are copying at increments: 1->2, 2->4, 4->8...
       Therefore, reallocation happens at 1,2,4,...,2^k for 2^k <= N < 2^k+1
@@ -66,5 +66,5 @@ public:
     assert(false && "Key does not exist in the table!");
   }
 
-  size_t getSize() { return size_; }
+  size_t size() { return size_; }
 };

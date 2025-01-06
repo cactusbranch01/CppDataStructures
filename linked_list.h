@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include <cstddef>   // For std::ptrdiff_t
-#include <iterator>  // For std::forward_iterator_tag
-#include <cassert>   // For std::assert
+#include <cassert>  // For std::assert
+#include <cstddef>  // For std::ptrdiff_t
+#include <iterator> // For std::forward_iterator_tag
 
 template <typename ValueType> class LinkedList {
 private:
@@ -37,8 +37,11 @@ private:
 public:
   LinkedList() : head_(nullptr), tail_(nullptr), size_(0) {}
 
+  // Rule of 5: destructor, copy constructor, copy assignment, move constructor,
+  // move assignment
   ~LinkedList() { clear(); }
 
+  // Copy constructor
   LinkedList(const LinkedList &other)
       : head_(nullptr), tail_(nullptr), size_(0) {
     for (const auto &value : other) {
@@ -46,12 +49,40 @@ public:
     }
   }
 
-  LinkedList &operator=(const LinkedList &other) {
+  // Copy assignment
+  LinkedList &operator=(const LinkedList &other) noexcept {
     if (this != &other) {
       clear();
       for (const auto &value : other) {
         pushBack(value);
       }
+    }
+    return *this;
+  }
+
+  // Move constructor
+  LinkedList(const LinkedList &&other) noexcept
+      : head_(other.head_), tail_(other.tail_), size_(other.size_) {
+    // this != other guaranteed by the fact that the rvalue ref cannot be the
+    // same ref as this in std::move
+    other.head_ = nullptr;
+    other.tail_ = nullptr;
+    other.size_ = 0;
+  }
+
+  // Move assignment
+  LinkedList &operator=(LinkedList &&other) noexcept {
+    if (this != &other) {
+      clear();
+      // Transfer pointers from other
+      head_ = other.head_;
+      tail_ = other.tail_;
+      size_ = other.size_;
+
+      // Release other ownership
+      other.head_ = nullptr;
+      other.tail_ = nullptr;
+      other.size_ = 0;
     }
     return *this;
   }
@@ -81,7 +112,7 @@ public:
   }
 
   void popFront() {
-    assert(!isEmpty());
+    assert(!empty());
     auto temp = head_;
     head_ = head_->next;
     if (head_) {
@@ -94,7 +125,7 @@ public:
   }
 
   void popBack() {
-    assert(!isEmpty());
+    assert(!empty());
     auto temp = tail_;
     tail_ = tail_->prev;
     if (tail_) {
@@ -107,28 +138,28 @@ public:
   }
 
   ValueType &front() {
-    assert(!isEmpty());
+    assert(!empty());
     return head_->value;
   }
 
   const ValueType &front() const {
-    assert(!isEmpty());
+    assert(!empty());
     return head_->value;
   }
 
   ValueType &back() {
-    assert(!isEmpty());
+    assert(!empty());
     return tail_->value;
   }
 
   const ValueType &back() const {
-    assert(!isEmpty());
+    assert(!empty());
     return tail_->value;
   }
 
   size_t size() const { return size_; }
 
-  bool isEmpty() const { return size_ == 0; }
+  bool empty() const { return size_ == 0; }
 
   class Iterator {
   private:

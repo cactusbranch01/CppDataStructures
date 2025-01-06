@@ -20,10 +20,10 @@ private:
   size_t num_elements_;
   float load_factor_;
 
-  size_t getCapacity() const { return table_.size(); }
+  size_t capacity() const { return table_.size(); }
 
   size_t hash(const KeyType &key) const {
-    return std::hash<KeyType>{}(key) % getCapacity();
+    return std::hash<KeyType>{}(key) % capacity();
   }
 
   void rehash(size_t newCapacity) {
@@ -45,8 +45,8 @@ public:
       : table_(capacity), num_elements_(0), load_factor_(load_factor) {}
 
   void insert(const KeyType &key, const ValueType &value) {
-    if (static_cast<float>(num_elements_ + 1) / getCapacity() > load_factor_) {
-      rehash(getCapacity() * 2);
+    if (static_cast<float>(num_elements_ + 1) / capacity() > load_factor_) {
+      rehash(capacity() * 2);
     }
     size_t hash_index = hash(key);
     /* .push_back({key, value}) also works in this line with similar runtime
@@ -67,5 +67,5 @@ public:
     assert(false && "Element is not in the table");
   }
 
-  size_t getSize() const { return num_elements_; }
+  size_t size() const { return num_elements_; }
 };

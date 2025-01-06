@@ -29,9 +29,9 @@ public:
   explicit CircularVectorQueue()
       : elements_(16), capacity_(16), size_(0), front_(0), back_(0) {}
 
-  size_t getSize() { return size_; }
+  size_t size() { return size_; }
 
-  bool isEmpty() { return size_ == 0; }
+  bool empty() { return size_ == 0; }
 
   void push(ValueType element) {
     if (size_ + 1 > capacity_) {
@@ -43,12 +43,12 @@ public:
   }
 
   ValueType peek() {
-    assert(!isEmpty());
+    assert(!empty());
     return elements_[front_];
   }
 
   ValueType popFront() {
-    assert(!isEmpty());
+    assert(!empty());
     size_--;
     ValueType first = elements_[front_];
     front_ = (front_ + 1) % capacity_;

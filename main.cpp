@@ -67,7 +67,7 @@ void testVectorStack(size_t testSize) {
   std::cout << "Insertion of " << testSize
             << " elements in the vector stack took " << insertDuration.count()
             << " seconds.\n";
-  assert(stack.getSize() == testSize &&
+  assert(stack.size() == testSize &&
          "Stack size should match the number of inserted elements");
 
   // Peek at the top element
@@ -91,7 +91,7 @@ void testVectorStack(size_t testSize) {
   std::cout << "Removal of " << testSize
             << " elements from the vector stack took " << removeDuration.count()
             << " seconds.\n";
-  assert(stack.getSize() == 0 &&
+  assert(stack.size() == 0 &&
          "Stack should be empty after popping all elements");
   std::cout << "All vector stack tests passed successfully.\n";
 }
@@ -109,7 +109,7 @@ void testCircularVectorQueue(size_t testSize) {
   std::cout << "Insertion of " << testSize
             << " elements in the vector queue took " << insertDuration.count()
             << " seconds.\n";
-  assert(queue.getSize() == testSize &&
+  assert(queue.size() == testSize &&
          "Queue size should match the number of inserted elements");
 
   // Peek
@@ -133,7 +133,7 @@ void testCircularVectorQueue(size_t testSize) {
   std::cout << "Removal of " << testSize
             << " elements from the vector queue took " << removeDuration.count()
             << " seconds.\n";
-  assert(queue.getSize() == 0 &&
+  assert(queue.size() == 0 &&
          "Queue should be empty after popping all elements");
   std::cout << "All vector queue tests passed successfully.\n";
 }
@@ -183,7 +183,7 @@ void testLinkedList(size_t testSize) {
             << " elements from the linked list took " << removeDuration.count()
             << " seconds.\n";
 
-  assert(linkedList.isEmpty() &&
+  assert(linkedList.empty() &&
          "Linked list should be empty after popping all elements");
   std::cout << "All tests passed successfully.\n";
 }
@@ -201,7 +201,7 @@ void testOpenAddressing(size_t testSize) {
   std::cout << "Insertion of " << testSize
             << " elements in an open address hashtable took "
             << insertDuration.count() << " seconds.\n";
-  assert(openHash.getSize() == testSize &&
+  assert(openHash.size() == testSize &&
          "Hash table size should match the number of inserted elements");
 
   // Retrieval
@@ -232,7 +232,7 @@ void testChainingVectorHash(size_t testSize) {
   std::cout << "Insertion of " << testSize
             << " elements in a vector chaining hashtable took "
             << insertDuration.count() << " seconds.\n";
-  assert(chainingHash.getSize() == testSize &&
+  assert(chainingHash.size() == testSize &&
          "Hash table size should match the number of inserted elements");
 
   // Retrieval
@@ -263,7 +263,7 @@ void testChainingLinkedHash(size_t testSize) {
   std::cout << "Insertion of " << testSize
             << " elements in a linked list chaining hashtable took "
             << insertDuration.count() << " seconds.\n";
-  assert(chainingHash.getSize() == testSize &&
+  assert(chainingHash.size() == testSize &&
          "Hash table size should match the number of inserted elements");
 
   // Retrieval

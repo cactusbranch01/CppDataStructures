@@ -17,17 +17,17 @@ public:
     linked_list_ = nullptr;
   }
 
-  bool isEmpty() { return linked_list_.isEmpty(); }
+  bool empty() { return linked_list_.empty(); }
 
   size_t size() { return linked_list_.size(); }
 
   ValueType popLeft() {
-    assert(!isEmpty());
+    assert(!empty());
     return linked_list_.popFront();
   }
 
   ValueType popRight() {
-    assert(!isEmpty());
+    assert(!empty());
     return linked_list_.popBack();
   }
 

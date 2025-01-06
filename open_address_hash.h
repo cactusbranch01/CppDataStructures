@@ -18,10 +18,10 @@ private:
   size_t num_elements_;
   float load_factor_;
 
-  size_t getCapacity() const { return table_.capacity(); }
+  size_t capacity() const { return table_.capacity(); }
 
   size_t standardHash(const KeyType &key) const {
-    return std::hash<KeyType>{}(key) % getCapacity();
+    return std::hash<KeyType>{}(key) % capacity();
   }
 
   void rehash(size_t newCapacity) {
@@ -41,8 +41,8 @@ public:
       : table_(capacity), num_elements_(0), load_factor_(load_factor) {}
 
   void insert(const KeyType &key, const ValueType &value) {
-    if (static_cast<float>(num_elements_ + 1) / getCapacity() > load_factor_) {
-      rehash(getCapacity() * 2);
+    if (static_cast<float>(num_elements_ + 1) / capacity() > load_factor_) {
+      rehash(capacity() * 2);
     }
 
     size_t index = standardHash(key);
@@ -54,7 +54,7 @@ public:
         table_[probe].value = value;
         return;
       }
-      probe = (probe + 1) % getCapacity();
+      probe = (probe + 1) % capacity();
     }
 
     table_[probe] = {key, value, false};
@@ -69,7 +69,7 @@ public:
       if (table_[probe].key == key) {
         return table_[probe].value;
       }
-      probe = (probe + 1) % getCapacity();
+      probe = (probe + 1) % capacity();
       if (probe == index) {
         break; // Searched the entire table
       }
@@ -77,5 +77,5 @@ public:
     assert(false && "Key does not exist in the table!");
   }
 
-  size_t getSize() const { return num_elements_; }
+  size_t size() const { return num_elements_; }
 };

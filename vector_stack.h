@@ -12,9 +12,9 @@ private:
 public:
   Stack() : elements_() {}
 
-  size_t getSize() const { return elements_.size(); }
+  size_t size() const { return elements_.size(); }
 
-  bool isEmpty() { return getSize() == 0; }
+  bool empty() { return size() == 0; }
 
   void clear() {
     elements_.clear();
@@ -25,12 +25,12 @@ public:
   }
 
   ValueType peek() {
-    assert(!isEmpty());
+    assert(!empty());
     return elements_.back();
   }
 
   ValueType pop() {
-    assert(!isEmpty());
+    assert(!empty());
     ValueType last_element = elements_.back();
     elements_.pop_back();
     return last_element;

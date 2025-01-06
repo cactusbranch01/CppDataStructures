@@ -13,21 +13,21 @@ public:
     linked_list_.clear();
   }
 
-  size_t getSize() {
+  size_t size() {
     return linked_list_.size();
   }
 
-  bool isEmpty() {
-    return linked_list_.isEmpty();
+  bool empty() {
+    return linked_list_.empty();
   }
 
   ValueType &peek() const {
-    assert(!isEmpty());
+    assert(!empty());
     return linked_list_.back()
   }
 
   ValueType &pop() {
-    assert(!isEmpty());
+    assert(!empty());
     auto back = std::move(linked_list_.back());
     linked_list_.popBack();
     return back;

@@ -37,6 +37,17 @@ public:
     }
   }
 
+  // Clear vector container
+  void clear() {
+    for (size_t i = 0; i < size_; ++i) {
+      array_[i].~ValueType();
+    }
+    size_ = 0;
+  }
+
+  // Destructor
+  ~Vector() { clear(); }
+
   // Copy constructor
   Vector(const Vector &other) : capacity_(other.capacity_), size_(other.size_) {
     if (capacity_ > 0) {
@@ -88,19 +99,6 @@ public:
       other.array_ = nullptr;
     }
     return *this;
-  }
-
-  // Clear vector container
-  void clear() {
-    for (size_t i = 0; i < size_; ++i) {
-      array_[i].~ValueType();
-    }
-    size_ = 0;
-  }
-
-  // Destructor
-  ~Vector() {
-    clear();
   }
 
   size_t capacity() const noexcept { return capacity_; }
