@@ -74,8 +74,7 @@ public:
         break; // Searched the entire table
       }
     }
-
-    throw std::runtime_error("Element is not in the table");
+    assert(false && "Key does not exist in the table!");
   }
 
   size_t getSize() const { return num_elements_; }

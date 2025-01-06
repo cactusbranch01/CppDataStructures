@@ -64,7 +64,7 @@ public:
         return entry.value;
       }
     }
-    throw std::runtime_error("Element is not in the table");
+    assert(false && "Element is not in the table");
   }
 
   size_t getSize() const { return num_elements_; }

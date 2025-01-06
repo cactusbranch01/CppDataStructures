@@ -2,9 +2,8 @@
 
 #pragma once
 
-#include "vector.h"  // For Vector
-#include <cassert>   // For asserts
-#include <stdexcept> // For std::exception
+#include "vector.h" // For Vector
+#include <cassert>  // For asserts
 
 template <typename ValueType> class CircularVectorQueue {
 private:

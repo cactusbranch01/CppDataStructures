@@ -3,9 +3,9 @@
 #pragma once
 
 #include "linked_list.h" // For linked lists
+#include "vector.h"      // For Vector
 #include <functional>    // For std::hash
 #include <stdexcept>     // For std::exception
-#include <vector>        // For std::vector
 
 template <typename KeyType, typename ValueType> class ChainingLinkedHash {
 private:
@@ -15,7 +15,7 @@ private:
     Entry(const KeyType &k, const ValueType &v) : key(k), value(v) {}
   };
 
-  std::vector<LinkedList<Entry>> table_;
+  Vector<LinkedList<Entry>> table_;
   size_t size_;
   float load_factor_;
 
@@ -27,7 +27,7 @@ private:
 
   void rehash(size_t new_capacity) {
     auto old_table = table_;
-    table_ = std::vector<LinkedList<Entry>>(new_capacity);
+    table_ = Vector<LinkedList<Entry>>(new_capacity);
     size_ = 0;
 
     for (const auto &list : old_table) {
@@ -63,7 +63,7 @@ public:
         return entry.value;
       }
     }
-    throw std::runtime_error("Element is not in the table");
+    assert(false && "Key does not exist in the table!");
   }
 
   size_t getSize() { return size_; }
