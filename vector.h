@@ -46,7 +46,11 @@ public:
   }
 
   // Destructor
-  ~Vector() { clear(); }
+  ~Vector() {
+    clear();
+    delete[] array_;
+    array_ = nullptr;
+  }
 
   // Copy constructor
   Vector(const Vector &other) : capacity_(other.capacity_), size_(other.size_) {
@@ -90,6 +94,7 @@ public:
   Vector &operator=(Vector &&other) noexcept {
     if (this != &other) {
       clear();
+      delete[] array_;
       capacity_ = other.capacity_;
       size_ = other.size_;
       array_ = other.array_;
