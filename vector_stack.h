@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "vector.h"  // For Vector
-#include <cassert>   // For assert
+#include "vector.h" // For Vector
+#include <cassert>  // For assert
 
 template <typename ValueType> class Stack {
 private:
@@ -16,13 +16,9 @@ public:
 
   bool empty() { return size() == 0; }
 
-  void clear() {
-    elements_.clear();
-  }
+  void clear() { elements_.clear(); }
 
-  void push(ValueType element) {
-    elements_.push_back(element);
-  }
+  void push(ValueType element) { elements_.push_back(element); }
 
   ValueType peek() {
     assert(!empty());

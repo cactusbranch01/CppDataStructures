@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "linked_list.h"  // For linked lists
-#include <cassert>        // For assert
+#include "linked_list.h" // For linked lists
+#include <cassert>       // For assert
 
 template <typename ValueType> class LinkedDequeue {
 private:
