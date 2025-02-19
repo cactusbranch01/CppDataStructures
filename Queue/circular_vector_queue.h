@@ -1,9 +1,9 @@
-// Copyright Ben Roberts 2024
+// Created by Ben Roberts 2024
 
 #pragma once
 
-#include "vector.h" // For Vector
-#include <cassert>  // For asserts
+#include "../list/vector.h" // For vectors
+#include <cassert>          // For asserts
 
 template <typename ValueType> class CircularVectorQueue {
 private:
@@ -47,11 +47,11 @@ public:
     return elements_[front_];
   }
 
-  ValueType popFront() {
+  ValueType pop_front() {
     assert(!empty());
-    size_--;
     ValueType first = elements_[front_];
     front_ = (front_ + 1) % capacity_;
+    --size_;
     return first;
   }
 };

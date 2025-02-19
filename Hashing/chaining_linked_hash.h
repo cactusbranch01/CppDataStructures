@@ -1,11 +1,11 @@
-// Copyright Ben Roberts 2024
+// Created by Ben Roberts 2024
 
 #pragma once
 
-#include "linked_list.h" // For linked lists
-#include "vector.h"      // For Vector
-#include <functional>    // For std::hash
-#include <stdexcept>     // For std::exception
+#include "../list/linked_list.h" // For linked lists
+#include "../list/vector.h"      // For vectors
+#include <functional>            // For std::hash
+#include <stdexcept>             // For std::exception
 
 template <typename KeyType, typename ValueType> class ChainingLinkedHash {
 private:
@@ -52,7 +52,7 @@ public:
       */
     }
     size_t hash_index = hash(key);
-    table_[hash_index].pushBack({key, value});
+    table_[hash_index].push_back({key, value});
     ++size_;
   }
 

@@ -1,6 +1,4 @@
-//
-// Created by Ben Roberts on 2024.
-//
+// Created by Ben Roberts 2025
 
 #pragma once
 
@@ -8,7 +6,7 @@
 #include <cstddef>  // For std::ptrdiff_t
 #include <iterator> // For std::forward_iterator_tag
 
-template <typename ValueType> class LinkedList {
+template <typename ValueType> class SingleLinkedList {
 private:
   struct Node {
     ValueType value;
@@ -20,124 +18,80 @@ private:
   };
 
   Node *head_;
-  Node *tail_;
   size_t size_;
 
   void clear() {
-    Node *current = head_;
+    Node *current = head;
     while (current != nullptr) {
       Node *tmp = current;
       current = current->next;
       delete tmp;
     }
-    head_ = tail_ = nullptr;
+    head_ = nullptr;
     size_ = 0;
   }
 
 public:
-  LinkedList() : head_(nullptr), tail_(nullptr), size_(0) {}
+  // Constructor
+  SingleLinkedList() : head_(nullptr), size_(0) {}
 
-  // Rule of 5: destructor, copy constructor, copy assignment, move constructor,
-  // move assignment
-  ~LinkedList() { clear(); }
+  // Destructor
+  ~SingleLinkedList() { clear(); }
 
   // Copy constructor
-  LinkedList(const LinkedList &other)
-      : head_(nullptr), tail_(nullptr), size_(0) {
-    for (const auto &value : other) {
-      pushBack(value);
+  SingleLinkedList(const SingleLinkedList &other) noexcept {
+    if (this != other) {
+      clear();
+      for (const auto &val : other) {
+        push_back(val);
+      }
     }
   }
 
   // Copy assignment
-  LinkedList &operator=(const LinkedList &other) noexcept {
-    if (this != &other) {
-      clear();
-      for (const auto &value : other) {
-        pushBack(value);
+  SingleLinkedList &operator=(const SingleLinkedList &other) noexcept {
+    if (this != other) {
+      for (const auto &val : other) {
+        push_back(val);
       }
     }
     return *this;
   }
 
   // Move constructor
-  LinkedList(const LinkedList &&other) noexcept
-      : head_(other.head_), tail_(other.tail_), size_(other.size_) {
-    // this != other guaranteed by the fact that the rvalue ref cannot be the
-    // same ref as this in std::move
+  SingleLinkedList(const SingleLinkedList &&other) noexcept
+      : head_(other.head_), size_(other.size) {
     other.head_ = nullptr;
-    other.tail_ = nullptr;
     other.size_ = 0;
   }
 
   // Move assignment
-  LinkedList &operator=(LinkedList &&other) noexcept {
-    if (this != &other) {
+  SingleLinkedList &operator=(SingleLinkedList &&other) noexcept {
+    if (this != other) {
       clear();
-      // Transfer pointers from other
       head_ = other.head_;
-      tail_ = other.tail_;
       size_ = other.size_;
 
-      // Release other ownership
       other.head_ = nullptr;
-      other.tail_ = nullptr;
-      other.size_ = 0;
+      other.size_ = nullptr;
     }
     return *this;
   }
 
-  void pushFront(const ValueType &value) {
-    Node *new_node = new Node(value);
-    if (!head_) {
-      head_ = tail_ = new_node;
+  bool empty() { return size_ == 0; }
+
+  void push_front(ValueType val) {
+    Node *new_node = Node(val);
+    if (head == nullptr) {
+      head_ = new_node;
     } else {
       new_node->next = head_;
-      head_->prev = new_node;
       head_ = new_node;
     }
-    ++size_;
+    ++size;
   }
 
-  void pushBack(const ValueType &value) {
-    Node *new_node = new Node(value);
-    if (!tail_) {
-      head_ = tail_ = new_node;
-    } else {
-      tail_->next = new_node;
-      new_node->prev = tail_;
-      tail_ = new_node;
-    }
-    ++size_;
-  }
-
-  void popFront() {
-    assert(!empty());
-    auto temp = head_;
-    head_ = head_->next;
-    if (head_) {
-      head_->prev = nullptr;
-    } else {
-      tail_ = nullptr;
-    }
-    delete temp;
-    --size_;
-  }
-
-  void popBack() {
-    assert(!empty());
-    auto temp = tail_;
-    tail_ = tail_->prev;
-    if (tail_) {
-      tail_->next = nullptr;
-    } else {
-      head_ = nullptr;
-    }
-    delete temp;
-    --size_;
-  }
-
-  ValueType &front() {
+  ValueType &front() const {
     assert(!empty());
     return head_->value;
   }
@@ -147,19 +101,12 @@ public:
     return head_->value;
   }
 
-  ValueType &back() {
+  void next() {
     assert(!empty());
-    return tail_->value;
+    head_ = head_->next;
   }
 
-  const ValueType &back() const {
-    assert(!empty());
-    return tail_->value;
-  }
-
-  size_t size() const { return size_; }
-
-  bool empty() const { return size_ == 0; }
+  size_t size() { return size_; }
 
   class Iterator {
   private:

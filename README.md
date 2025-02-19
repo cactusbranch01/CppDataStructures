@@ -1,4 +1,3 @@
 # DataStructuresInC
 
-Implements common data structures in C++
-Stacks, Queues, Linked Lists, and Hashing
+Implements vector, stack, queue, linked list, and hashing data structures in C++

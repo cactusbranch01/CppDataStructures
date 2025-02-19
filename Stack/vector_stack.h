@@ -1,9 +1,9 @@
-// Copyright Ben Roberts 2024
+// Created by Ben Roberts 2024
 
 #pragma once
 
-#include "vector.h" // For Vector
-#include <cassert>  // For assert
+#include "../list/vector.h" // For vectors
+#include <cassert>          // For assert
 
 template <typename ValueType> class Stack {
 private:

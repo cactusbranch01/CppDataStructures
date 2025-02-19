@@ -2,18 +2,19 @@
 // Created by Ben Roberts on 2024.
 //
 
-#include "chaining_linked_hash.h"
-#include "chaining_vector_hash.h"
-#include "circular_vector_queue.h"
-#include "linked_dequeue.h"
-#include "linked_list.h"
-#include "open_address_hash.h"
-#include "vector.h"
-#include "vector_stack.h"
-#include <cassert>
-#include <chrono>
-#include <iostream>
-#include <string>
+#include "hashing/chaining_linked_hash.h" // For chaining list hashtables
+#include "hashing/chaining_vector_hash.h" // For chaining vector hashtables
+#include "hashing/open_address_hash.h"    // For open address hashtables
+#include "list/linked_list.h"             // For linked lists
+#include "list/vector.h"                  // For vectors
+#include "queue/circular_vector_queue.h"  // For circular vector queues
+#include "queue/linked_dequeue.h"         // For linked dequeues
+#include "stack/linked_stack.h"           // For linked list stacks
+#include "stack/vector_stack.h"           // For vector stacks
+#include <cassert>                        // For asserts
+#include <chrono>                         // For timers
+#include <iostream>                       // For stdout
+#include <string>                         // For std::string
 
 void testVector(size_t testSize) {
   Vector<int> vec;
@@ -51,8 +52,7 @@ void testVector(size_t testSize) {
     assert(vec.back() == static_cast<int>(testSize - 1) &&
            "Back element should be the last inserted value");
   }
-  std::cout << "All vector tests passed successfully.\n";
-}
+  std::cout << "All vector tests passed successfully.\n" << std::endl;}
 
 void testVectorStack(size_t testSize) {
   Stack<std::pair<int, std::string>> stack;
@@ -93,8 +93,48 @@ void testVectorStack(size_t testSize) {
             << " seconds.\n";
   assert(stack.size() == 0 &&
          "Stack should be empty after popping all elements");
-  std::cout << "All vector stack tests passed successfully.\n";
-}
+  std::cout << "All vector stack tests passed successfully.\n" << std::endl;}
+
+void testLinkedStack(size_t testSize) {
+  LinkedStack<std::pair<int, std::string>> stack;
+
+  // Insertion
+  auto insertStart = std::chrono::high_resolution_clock::now();
+  for (int i = 0; i < static_cast<int>(testSize); ++i) {
+    stack.push({i, "Value_" + std::to_string(i)});
+  }
+  auto insertEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> insertDuration = insertEnd - insertStart;
+  std::cout << "Insertion of " << testSize
+            << " elements in the linked list stack took " << insertDuration.count()
+            << " seconds.\n";
+  assert(stack.size() == testSize &&
+         "Stack size should match the number of inserted elements");
+
+  // Peek at the top element
+  auto top = stack.peek();
+  assert(top.first == static_cast<int>(testSize - 1) &&
+         "Top element key should be the last inserted key");
+  assert(top.second == "Value_" + std::to_string(testSize - 1) &&
+         "Top element value should be the last inserted value");
+
+  // Removal
+  auto removeStart = std::chrono::high_resolution_clock::now();
+  for (int i = static_cast<int>(testSize) - 1; i >= 0; --i) {
+    auto element = stack.pop();
+    assert(element.first == i &&
+           "Popped element key should match the expected key");
+    assert(element.second == "Value_" + std::to_string(i) &&
+           "Popped element value should match the expected value");
+  }
+  auto removeEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> removeDuration = removeEnd - removeStart;
+  std::cout << "Removal of " << testSize
+            << " elements from the linked list stack took " << removeDuration.count()
+            << " seconds.\n";
+  assert(stack.size() == 0 &&
+         "Stack should be empty after popping all elements");
+  std::cout << "All linked stack tests passed successfully.\n" << std::endl;}
 
 void testCircularVectorQueue(size_t testSize) {
   CircularVectorQueue<std::pair<int, std::string>> queue;
@@ -122,7 +162,7 @@ void testCircularVectorQueue(size_t testSize) {
   // Removal
   auto removeStart = std::chrono::high_resolution_clock::now();
   for (int i = 0; i < static_cast<int>(testSize); ++i) {
-    auto element = queue.popFront();
+    auto element = queue.pop_front();
     assert(element.first == i &&
            "Popped element key should match the expected key");
     assert(element.second == "Value_" + std::to_string(i) &&
@@ -135,8 +175,7 @@ void testCircularVectorQueue(size_t testSize) {
             << " seconds.\n";
   assert(queue.size() == 0 &&
          "Queue should be empty after popping all elements");
-  std::cout << "All vector queue tests passed successfully.\n";
-}
+  std::cout << "All vector queue tests passed successfully.\n" << std::endl;}
 
 void testLinkedList(size_t testSize) {
   LinkedList<std::pair<int, std::string>> linkedList;
@@ -144,7 +183,7 @@ void testLinkedList(size_t testSize) {
   // Insertion
   auto insertStart = std::chrono::high_resolution_clock::now();
   for (int i = 0; i < (int)testSize; ++i) {
-    linkedList.pushBack({i, "Value_" + std::to_string(i)});
+    linkedList.push_back({i, "Value_" + std::to_string(i)});
   }
   auto insertEnd = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> insertDuration = insertEnd - insertStart;
@@ -175,7 +214,7 @@ void testLinkedList(size_t testSize) {
   // Removal
   auto removeStart = std::chrono::high_resolution_clock::now();
   for (size_t i = 0; i < testSize; ++i) {
-    linkedList.popFront();
+    linkedList.pop_front();
   }
   auto removeEnd = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> removeDuration = removeEnd - removeStart;
@@ -185,8 +224,7 @@ void testLinkedList(size_t testSize) {
 
   assert(linkedList.empty() &&
          "Linked list should be empty after popping all elements");
-  std::cout << "All tests passed successfully.\n";
-}
+  std::cout << "All tests passed successfully.\n" << std::endl;}
 
 void testOpenAddressing(size_t testSize) {
   OpenAddressHash<int, std::string> openHash;
@@ -216,8 +254,7 @@ void testOpenAddressing(size_t testSize) {
   std::cout << "Retrieval of " << testSize
             << " elements in an open address hashtable took "
             << retrieveDuration.count() << " seconds.\n";
-  std::cout << "All tests passed successfully." << std::endl;
-}
+  std::cout << "All open adddress hash tests passed successfully.\n" << std::endl;}
 
 void testChainingVectorHash(size_t testSize) {
   ChainingVectorHash<int, std::string> chainingHash;
@@ -247,7 +284,7 @@ void testChainingVectorHash(size_t testSize) {
   std::cout << "Retrieval of " << testSize
             << " elements in a vector chaining hashtable took "
             << retrieveDuration.count() << " seconds.\n";
-  std::cout << "All tests passed successfully." << std::endl;
+  std::cout << "All vector chaining hash tests passed successfully.\n" << std::endl;
 }
 
 void testChainingLinkedHash(size_t testSize) {
@@ -278,14 +315,16 @@ void testChainingLinkedHash(size_t testSize) {
   std::cout << "Retrieval of " << testSize
             << " elements in a linked list chaining hashtable took "
             << retrieveDuration.count() << " seconds.\n";
-  std::cout << "All tests passed successfully." << std::endl;
-}
+  std::cout << "All linked chaining hashing tests passed successfully.\n" << std::endl;}
 
 int main() {
   testVector(1'000'000);
-  testVectorStack(1'000'000);
-  testCircularVectorQueue(1'000'000);
   testLinkedList(1'000'000);
+
+  testLinkedStack(1'000'000);
+  testVectorStack(1'000'000);
+
+  testCircularVectorQueue(1'000'000);
   testOpenAddressing(1'000'000);
   testChainingVectorHash(1'000'000);
   testChainingLinkedHash(1'000'000);

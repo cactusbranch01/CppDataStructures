@@ -1,4 +1,4 @@
-// Copyright Ben Roberts 2024
+// Created by Ben Roberts 2024
 
 #pragma once
 

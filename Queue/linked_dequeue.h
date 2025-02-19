@@ -1,9 +1,9 @@
-// Copyright Ben Roberts 2025
+// Created by Ben Roberts 2025
 
 #pragma once
 
-#include "linked_list.h" // For linked lists
-#include <cassert>       // For assert
+#include "../list/linked_list.h" // For linked lists
+#include <cassert>               // For assert
 
 template <typename ValueType> class LinkedDequeue {
 private:
@@ -23,15 +23,15 @@ public:
 
   ValueType popLeft() {
     assert(!empty());
-    return linked_list_.popFront();
+    return linked_list_.pop_front();
   }
 
   ValueType popRight() {
     assert(!empty());
-    return linked_list_.popBack();
+    return linked_list_.pop_back();
   }
 
-  void pushLeft(const ValueType &val) { linked_list_.pushFront(val); }
+  void pushLeft(const ValueType &val) { linked_list_.push_front(val); }
 
   void pushRight(const ValueType &val) { linked_list_.pushLeft(val); }
 };
