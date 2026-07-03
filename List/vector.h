@@ -46,11 +46,7 @@ public:
   }
 
   // Destructor
-  ~Vector() {
-    clear();
-    delete[] array_;
-    array_ = nullptr;
-  }
+  ~Vector() { delete[] array_; }
 
   // Copy constructor
   Vector(const Vector &other) : capacity_(other.capacity_), size_(other.size_) {
@@ -77,7 +73,7 @@ public:
     if (this != &other) {
       // If allocated capacity is smaller than other's size, re-allocate
       if (capacity_ < other.size_) {
-        clear();
+        delete[] array_;
         array_ = new ValueType[other.capacity_];
         capacity_ = other.capacity_;
       }
@@ -93,7 +89,6 @@ public:
   // Move assignment
   Vector &operator=(Vector &&other) noexcept {
     if (this != &other) {
-      clear();
       delete[] array_;
       capacity_ = other.capacity_;
       size_ = other.size_;

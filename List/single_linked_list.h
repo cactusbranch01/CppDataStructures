@@ -11,46 +11,44 @@ private:
   struct Node {
     ValueType value;
     Node *next;
-    Node *prev;
 
-    explicit Node(const ValueType &val)
-        : value(val), next(nullptr), prev(nullptr) {}
+    explicit Node(const ValueType &val) : value(val), next(nullptr) {}
   };
 
   Node *head_;
+  Node *tail_;
   size_t size_;
 
   void clear() {
-    Node *current = head;
+    Node *current = head_;
     while (current != nullptr) {
       Node *tmp = current;
       current = current->next;
       delete tmp;
     }
-    head_ = nullptr;
+    head_ = tail_ = nullptr;
     size_ = 0;
   }
 
 public:
   // Constructor
-  SingleLinkedList() : head_(nullptr), size_(0) {}
+  SingleLinkedList() : head_(nullptr), tail_(nullptr), size_(0) {}
 
   // Destructor
   ~SingleLinkedList() { clear(); }
 
   // Copy constructor
-  SingleLinkedList(const SingleLinkedList &other) noexcept {
-    if (this != other) {
-      clear();
-      for (const auto &val : other) {
-        push_back(val);
-      }
+  SingleLinkedList(const SingleLinkedList &other)
+      : head_(nullptr), tail_(nullptr), size_(0) {
+    for (const auto &val : other) {
+      push_back(val);
     }
   }
 
   // Copy assignment
-  SingleLinkedList &operator=(const SingleLinkedList &other) noexcept {
-    if (this != other) {
+  SingleLinkedList &operator=(const SingleLinkedList &other) {
+    if (this != &other) {
+      clear();
       for (const auto &val : other) {
         push_back(val);
       }
@@ -59,39 +57,64 @@ public:
   }
 
   // Move constructor
-  SingleLinkedList(const SingleLinkedList &&other) noexcept
-      : head_(other.head_), size_(other.size) {
+  SingleLinkedList(SingleLinkedList &&other) noexcept
+      : head_(other.head_), tail_(other.tail_), size_(other.size_) {
     other.head_ = nullptr;
+    other.tail_ = nullptr;
     other.size_ = 0;
   }
 
   // Move assignment
   SingleLinkedList &operator=(SingleLinkedList &&other) noexcept {
-    if (this != other) {
+    if (this != &other) {
       clear();
       head_ = other.head_;
+      tail_ = other.tail_;
       size_ = other.size_;
 
       other.head_ = nullptr;
-      other.size_ = nullptr;
+      other.tail_ = nullptr;
+      other.size_ = 0;
     }
     return *this;
   }
 
-  bool empty() { return size_ == 0; }
+  bool empty() const { return size_ == 0; }
 
-  void push_front(ValueType val) {
-    Node *new_node = Node(val);
-    if (head == nullptr) {
-      head_ = new_node;
+  void push_front(const ValueType &val) {
+    Node *new_node = new Node(val);
+    if (head_ == nullptr) {
+      head_ = tail_ = new_node;
     } else {
       new_node->next = head_;
       head_ = new_node;
     }
-    ++size;
+    ++size_;
   }
 
-  ValueType &front() const {
+  void push_back(const ValueType &val) {
+    Node *new_node = new Node(val);
+    if (tail_ == nullptr) {
+      head_ = tail_ = new_node;
+    } else {
+      tail_->next = new_node;
+      tail_ = new_node;
+    }
+    ++size_;
+  }
+
+  void pop_front() {
+    assert(!empty());
+    Node *tmp = head_;
+    head_ = head_->next;
+    if (head_ == nullptr) {
+      tail_ = nullptr;
+    }
+    delete tmp;
+    --size_;
+  }
+
+  ValueType &front() {
     assert(!empty());
     return head_->value;
   }
@@ -101,12 +124,17 @@ public:
     return head_->value;
   }
 
-  void next() {
+  ValueType &back() {
     assert(!empty());
-    head_ = head_->next;
+    return tail_->value;
   }
 
-  size_t size() { return size_; }
+  const ValueType &back() const {
+    assert(!empty());
+    return tail_->value;
+  }
+
+  size_t size() const { return size_; }
 
   class Iterator {
   private:

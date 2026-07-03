@@ -7,31 +7,30 @@
 
 template <typename ValueType> class LinkedDequeue {
 private:
-  LinkedList<ValueType> *linked_list_;
+  LinkedList<ValueType> linked_list_;
 
 public:
-  LinkedDequeue() { linked_list_ = new LinkedList<ValueType>(); }
+  LinkedDequeue() = default;
 
-  ~LinkedDequeue() {
-    linked_list_.clear();
-    linked_list_ = nullptr;
-  }
+  bool empty() const { return linked_list_.empty(); }
 
-  bool empty() { return linked_list_.empty(); }
-
-  size_t size() { return linked_list_.size(); }
+  size_t size() const { return linked_list_.size(); }
 
   ValueType popLeft() {
     assert(!empty());
-    return linked_list_.pop_front();
+    ValueType val = linked_list_.front();
+    linked_list_.pop_front();
+    return val;
   }
 
   ValueType popRight() {
     assert(!empty());
-    return linked_list_.pop_back();
+    ValueType val = linked_list_.back();
+    linked_list_.pop_back();
+    return val;
   }
 
   void pushLeft(const ValueType &val) { linked_list_.push_front(val); }
 
-  void pushRight(const ValueType &val) { linked_list_.pushLeft(val); }
+  void pushRight(const ValueType &val) { linked_list_.push_back(val); }
 };
