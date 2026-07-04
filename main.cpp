@@ -11,10 +11,14 @@
 #include "queue/linked_dequeue.h"         // For linked dequeues
 #include "stack/linked_stack.h"           // For linked list stacks
 #include "stack/vector_stack.h"           // For vector stacks
+#include "tree/bst.h"                     // For binary search trees
+#include <algorithm>                      // For std::shuffle
 #include <cassert>                        // For asserts
 #include <chrono>                         // For timers
 #include <iostream>                       // For stdout
+#include <random>                         // For std::mt19937
 #include <string>                         // For std::string
+#include <vector>                         // For shuffled test keys
 
 void testVector(size_t testSize) {
   Vector<int> vec;
@@ -317,6 +321,76 @@ void testChainingLinkedHash(size_t testSize) {
             << retrieveDuration.count() << " seconds.\n";
   std::cout << "All linked chaining hashing tests passed successfully.\n" << std::endl;}
 
+void testBST(size_t testSize) {
+  BST<int> bst;
+
+  // Insert keys in shuffled order so the unbalanced tree stays close to
+  // O(log n) height instead of degenerating into a linked list
+  std::vector<int> keys(testSize);
+  for (size_t i = 0; i < testSize; ++i) {
+    keys[i] = static_cast<int>(i);
+  }
+  std::mt19937 rng(42);
+  std::shuffle(keys.begin(), keys.end(), rng);
+
+  // Insertion
+  auto insertStart = std::chrono::high_resolution_clock::now();
+  for (int key : keys) {
+    bst.insert(key);
+  }
+  auto insertEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> insertDuration = insertEnd - insertStart;
+  std::cout << "Insertion of " << testSize << " elements in the BST took "
+            << insertDuration.count() << " seconds.\n";
+  assert(bst.size() == testSize &&
+         "BST size should match the number of inserted elements");
+
+  // Duplicate insertion should not change the size
+  bst.insert(0);
+  assert(bst.size() == testSize &&
+         "Inserting a duplicate value should not change the BST size");
+
+  // Retrieval
+  auto retrieveStart = std::chrono::high_resolution_clock::now();
+  for (int i = 0; i < static_cast<int>(testSize); ++i) {
+    assert(bst.contains(i) && "BST should contain every inserted value");
+  }
+  auto retrieveEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> retrieveDuration = retrieveEnd - retrieveStart;
+  std::cout << "Retrieval of " << testSize << " elements in the BST took "
+            << retrieveDuration.count() << " seconds.\n";
+  assert(!bst.contains(static_cast<int>(testSize)) &&
+         "BST should not contain a value that was never inserted");
+
+  // Min and max
+  assert(bst.min() == 0 && "Min should be the smallest inserted value");
+  assert(bst.max() == static_cast<int>(testSize - 1) &&
+         "Max should be the largest inserted value");
+
+  // Rule of 3: copies should be deep and independent of the original
+  BST<int> copy(bst);
+  assert(copy.size() == bst.size() &&
+         "Copied BST size should match the original");
+  copy.remove(0);
+  assert(!copy.contains(0) &&
+         "Removed value should be gone from the copied BST");
+  assert(bst.contains(0) &&
+         "Removing from the copy should not affect the original");
+
+  // Removal
+  auto removeStart = std::chrono::high_resolution_clock::now();
+  for (int key : keys) {
+    bst.remove(key);
+  }
+  auto removeEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> removeDuration = removeEnd - removeStart;
+  std::cout << "Removal of " << testSize << " elements from the BST took "
+            << removeDuration.count() << " seconds.\n";
+  assert(bst.size() == 0 &&
+         "BST should be empty after removing all elements");
+  assert(bst.empty() && "BST should report empty after removing all elements");
+  std::cout << "All BST tests passed successfully.\n" << std::endl;}
+
 int main() {
   testVector(1'000'000);
   testLinkedList(1'000'000);
@@ -328,5 +402,7 @@ int main() {
   testOpenAddressing(1'000'000);
   testChainingVectorHash(1'000'000);
   testChainingLinkedHash(1'000'000);
+
+  testBST(1'000'000);
   return 0;
 }
