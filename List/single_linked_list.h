@@ -10,19 +10,19 @@ template <typename ValueType> class SingleLinkedList {
 private:
   struct Node {
     ValueType value;
-    Node *next;
+    Node* next;
 
-    explicit Node(const ValueType &val) : value(val), next(nullptr) {}
+    explicit Node(const ValueType& val) : value(val), next(nullptr) {}
   };
 
-  Node *head_;
-  Node *tail_;
+  Node* head_;
+  Node* tail_;
   size_t size_;
 
   void clear() {
-    Node *current = head_;
+    Node* current = head_;
     while (current != nullptr) {
-      Node *tmp = current;
+      Node* tmp = current;
       current = current->next;
       delete tmp;
     }
@@ -38,18 +38,18 @@ public:
   ~SingleLinkedList() { clear(); }
 
   // Copy constructor
-  SingleLinkedList(const SingleLinkedList &other)
+  SingleLinkedList(const SingleLinkedList& other)
       : head_(nullptr), tail_(nullptr), size_(0) {
-    for (const auto &val : other) {
+    for (const auto& val : other) {
       push_back(val);
     }
   }
 
   // Copy assignment
-  SingleLinkedList &operator=(const SingleLinkedList &other) {
+  SingleLinkedList& operator=(const SingleLinkedList& other) {
     if (this != &other) {
       clear();
-      for (const auto &val : other) {
+      for (const auto& val : other) {
         push_back(val);
       }
     }
@@ -57,7 +57,7 @@ public:
   }
 
   // Move constructor
-  SingleLinkedList(SingleLinkedList &&other) noexcept
+  SingleLinkedList(SingleLinkedList&& other) noexcept
       : head_(other.head_), tail_(other.tail_), size_(other.size_) {
     other.head_ = nullptr;
     other.tail_ = nullptr;
@@ -65,7 +65,7 @@ public:
   }
 
   // Move assignment
-  SingleLinkedList &operator=(SingleLinkedList &&other) noexcept {
+  SingleLinkedList& operator=(SingleLinkedList&& other) noexcept {
     if (this != &other) {
       clear();
       head_ = other.head_;
@@ -81,8 +81,8 @@ public:
 
   bool empty() const { return size_ == 0; }
 
-  void push_front(const ValueType &val) {
-    Node *new_node = new Node(val);
+  void push_front(const ValueType& val) {
+    Node* new_node = new Node(val);
     if (head_ == nullptr) {
       head_ = tail_ = new_node;
     } else {
@@ -92,8 +92,8 @@ public:
     ++size_;
   }
 
-  void push_back(const ValueType &val) {
-    Node *new_node = new Node(val);
+  void push_back(const ValueType& val) {
+    Node* new_node = new Node(val);
     if (tail_ == nullptr) {
       head_ = tail_ = new_node;
     } else {
@@ -105,7 +105,7 @@ public:
 
   void pop_front() {
     assert(!empty());
-    Node *tmp = head_;
+    Node* tmp = head_;
     head_ = head_->next;
     if (head_ == nullptr) {
       tail_ = nullptr;
@@ -114,22 +114,22 @@ public:
     --size_;
   }
 
-  ValueType &front() {
+  ValueType& front() {
     assert(!empty());
     return head_->value;
   }
 
-  const ValueType &front() const {
+  const ValueType& front() const {
     assert(!empty());
     return head_->value;
   }
 
-  ValueType &back() {
+  ValueType& back() {
     assert(!empty());
     return tail_->value;
   }
 
-  const ValueType &back() const {
+  const ValueType& back() const {
     assert(!empty());
     return tail_->value;
   }
@@ -138,22 +138,22 @@ public:
 
   class Iterator {
   private:
-    Node *current_;
+    Node* current_;
 
   public:
     using iterator_category = std::forward_iterator_tag;
     using value_type = ValueType;
     using difference_type = std::ptrdiff_t;
-    using pointer = ValueType *;
-    using reference = ValueType &;
+    using pointer = ValueType*;
+    using reference = ValueType&;
 
-    explicit Iterator(Node *node) : current_(node) {}
+    explicit Iterator(Node* node) : current_(node) {}
 
     reference operator*() const { return current_->value; }
     pointer operator->() const { return &(current_->value); }
 
     // Prefix increment
-    Iterator &operator++() {
+    Iterator& operator++() {
       if (current_) {
         current_ = current_->next;
       }
@@ -167,10 +167,10 @@ public:
       return temp;
     }
 
-    bool operator==(const Iterator &other) const {
+    bool operator==(const Iterator& other) const {
       return current_ == other.current_;
     }
-    bool operator!=(const Iterator &other) const {
+    bool operator!=(const Iterator& other) const {
       return current_ != other.current_;
     }
   };

@@ -12,7 +12,7 @@ private:
   struct Entry {
     KeyType key;
     ValueType value;
-    Entry(const KeyType &k, const ValueType &v) : key(k), value(v) {}
+    Entry(const KeyType& k, const ValueType& v) : key(k), value(v) {}
   };
 
   Vector<LinkedList<Entry>> table_;
@@ -21,7 +21,7 @@ private:
 
   size_t capacity() const { return table_.size(); }
 
-  size_t hash(const KeyType &key) const {
+  size_t hash(const KeyType& key) const {
     return std::hash<KeyType>{}(key) % capacity();
   }
 
@@ -30,8 +30,8 @@ private:
     table_ = Vector<LinkedList<Entry>>(new_capacity);
     size_ = 0;
 
-    for (const auto &list : old_table) {
-      for (const auto &entry : list) {
+    for (const auto& list : old_table) {
+      for (const auto& entry : list) {
         insert(entry.key, entry.value);
       }
     }
@@ -41,7 +41,7 @@ public:
   explicit ChainingLinkedHash(size_t capacity = 8, float load_factor = 2.0)
       : table_(capacity), size_(0), load_factor_(load_factor) {}
 
-  void insert(const KeyType &key, const ValueType &value) {
+  void insert(const KeyType& key, const ValueType& value) {
     if (static_cast<float>(size_ + 1) / capacity() > load_factor_) {
       rehash(capacity() * 2);
       /* The number of copies per element is an amortized constant cost.
@@ -56,9 +56,9 @@ public:
     ++size_;
   }
 
-  ValueType get(const KeyType &key) const {
+  ValueType get(const KeyType& key) const {
     size_t hash_index = hash(key);
-    for (const auto &entry : table_[hash_index]) {
+    for (const auto& entry : table_[hash_index]) {
       if (entry.key == key) {
         return entry.value;
       }

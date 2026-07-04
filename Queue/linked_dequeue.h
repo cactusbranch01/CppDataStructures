@@ -30,7 +30,7 @@ public:
     return val;
   }
 
-  void pushLeft(const ValueType &val) { linked_list_.push_front(val); }
+  void pushLeft(const ValueType& val) { linked_list_.push_front(val); }
 
-  void pushRight(const ValueType &val) { linked_list_.push_back(val); }
+  void pushRight(const ValueType& val) { linked_list_.push_back(val); }
 };

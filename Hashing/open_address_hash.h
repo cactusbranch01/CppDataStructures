@@ -20,7 +20,7 @@ private:
 
   size_t capacity() const { return table_.capacity(); }
 
-  size_t standardHash(const KeyType &key) const {
+  size_t standardHash(const KeyType& key) const {
     return std::hash<KeyType>{}(key) % capacity();
   }
 
@@ -29,7 +29,7 @@ private:
     table_ = Vector<Entry>(newCapacity);
     num_elements_ = 0;
 
-    for (const auto &entry : old_table) {
+    for (const auto& entry : old_table) {
       if (!entry.empty) {
         insert(entry.key, entry.value);
       }
@@ -40,7 +40,7 @@ public:
   explicit OpenAddressHash(size_t capacity = 8, float load_factor = 0.5)
       : table_(capacity), num_elements_(0), load_factor_(load_factor) {}
 
-  void insert(const KeyType &key, const ValueType &value) {
+  void insert(const KeyType& key, const ValueType& value) {
     if (static_cast<float>(num_elements_ + 1) / capacity() > load_factor_) {
       rehash(capacity() * 2);
     }
@@ -61,7 +61,7 @@ public:
     num_elements_++;
   }
 
-  ValueType get(const KeyType &key) {
+  ValueType get(const KeyType& key) {
     size_t index = standardHash(key);
     size_t probe = index;
 

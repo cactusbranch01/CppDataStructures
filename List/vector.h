@@ -8,7 +8,7 @@ template <typename ValueType> class Vector {
 private:
   size_t capacity_;
   size_t size_;
-  ValueType *array_;
+  ValueType* array_;
 
 public:
   // Default constructor
@@ -31,7 +31,7 @@ public:
     if (capacity_ > 0) {
       array_ = new ValueType[capacity_];
       size_t idx = 0;
-      for (const auto &val : init) {
+      for (const auto& val : init) {
         array_[idx++] = val;
       }
     }
@@ -49,7 +49,7 @@ public:
   ~Vector() { delete[] array_; }
 
   // Copy constructor
-  Vector(const Vector &other) : capacity_(other.capacity_), size_(other.size_) {
+  Vector(const Vector& other) : capacity_(other.capacity_), size_(other.size_) {
     if (capacity_ > 0) {
       array_ = new ValueType[capacity_];
       for (size_t i = 0; i < size_; ++i) {
@@ -61,7 +61,7 @@ public:
   }
 
   // Move constructor
-  Vector(Vector &&other) noexcept
+  Vector(Vector&& other) noexcept
       : capacity_(other.capacity_), size_(other.size_), array_(other.array_) {
     other.size_ = 0;
     other.capacity_ = 0;
@@ -69,7 +69,7 @@ public:
   }
 
   // Copy assignment
-  Vector &operator=(const Vector &other) noexcept {
+  Vector& operator=(const Vector& other) noexcept {
     if (this != &other) {
       // If allocated capacity is smaller than other's size, re-allocate
       if (capacity_ < other.size_) {
@@ -87,7 +87,7 @@ public:
   }
 
   // Move assignment
-  Vector &operator=(Vector &&other) noexcept {
+  Vector& operator=(Vector&& other) noexcept {
     if (this != &other) {
       delete[] array_;
       capacity_ = other.capacity_;
@@ -107,14 +107,14 @@ public:
 
   bool empty() const noexcept { return size_ == 0; }
 
-  void push_back(const ValueType &value) {
+  void push_back(const ValueType& value) {
     if (size_ == capacity_) {
       reserve(capacity_ == 0 ? 8 : 2 * capacity_);
     }
     array_[size_++] = value;
   }
 
-  void push_back(ValueType &&value) {
+  void push_back(ValueType&& value) {
     if (size_ == capacity_) {
       reserve(capacity_ == 0 ? 8 : 2 * capacity_);
     }
@@ -127,21 +127,21 @@ public:
     }
   }
 
-  ValueType &front() { return array_[0]; }
+  ValueType& front() { return array_[0]; }
 
-  const ValueType &front() const { return array_[0]; }
+  const ValueType& front() const { return array_[0]; }
 
-  ValueType &back() { return array_[size_ - 1]; }
+  ValueType& back() { return array_[size_ - 1]; }
 
-  const ValueType &back() const { return array_[size_ - 1]; }
+  const ValueType& back() const { return array_[size_ - 1]; }
 
-  ValueType &operator[](size_t i) { return array_[i]; }
+  ValueType& operator[](size_t i) { return array_[i]; }
 
-  const ValueType &operator[](size_t i) const { return array_[i]; }
+  const ValueType& operator[](size_t i) const { return array_[i]; }
 
   void reserve(size_t new_cap) {
     if (new_cap > capacity_) {
-      ValueType *new_data = new ValueType[new_cap];
+      ValueType* new_data = new ValueType[new_cap];
       for (size_t i = 0; i < size_; ++i) {
         new_data[i] = std::move(array_[i]);
       }
@@ -168,7 +168,7 @@ public:
     }
   }
 
-  void resize(size_t count, const ValueType &value) {
+  void resize(size_t count, const ValueType& value) {
     if (count < size_) {
       for (size_t i = size_; i < count; ++i) {
         array_[i].~ValueType();
@@ -188,13 +188,13 @@ public:
   // Non-const iterator
   class Iterator {
   private:
-    ValueType *ptr_;
+    ValueType* ptr_;
 
   public:
-    explicit Iterator(ValueType *p) : ptr_(p) {}
-    ValueType &operator*() const { return *ptr_; }
-    ValueType *operator->() const { return ptr_; }
-    Iterator &operator++() {
+    explicit Iterator(ValueType* p) : ptr_(p) {}
+    ValueType& operator*() const { return *ptr_; }
+    ValueType* operator->() const { return ptr_; }
+    Iterator& operator++() {
       ++ptr_;
       return *this;
     }
@@ -203,20 +203,20 @@ public:
       ++(*this);
       return tmp;
     }
-    bool operator==(const Iterator &other) const { return ptr_ == other.ptr_; }
-    bool operator!=(const Iterator &other) const { return !(*this == other); }
+    bool operator==(const Iterator& other) const { return ptr_ == other.ptr_; }
+    bool operator!=(const Iterator& other) const { return !(*this == other); }
   };
 
   // Const iterator
   class ConstIterator {
   private:
-    const ValueType *ptr_;
+    const ValueType* ptr_;
 
   public:
-    explicit ConstIterator(const ValueType *p) : ptr_(p) {}
-    const ValueType &operator*() const { return *ptr_; }
-    const ValueType *operator->() const { return ptr_; }
-    ConstIterator &operator++() {
+    explicit ConstIterator(const ValueType* p) : ptr_(p) {}
+    const ValueType& operator*() const { return *ptr_; }
+    const ValueType* operator->() const { return ptr_; }
+    ConstIterator& operator++() {
       ++ptr_;
       return *this;
     }
@@ -225,10 +225,10 @@ public:
       ++(*this);
       return tmp;
     }
-    bool operator==(const ConstIterator &other) const {
+    bool operator==(const ConstIterator& other) const {
       return ptr_ == other.ptr_;
     }
-    bool operator!=(const ConstIterator &other) const {
+    bool operator!=(const ConstIterator& other) const {
       return !(*this == other);
     }
   };

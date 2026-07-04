@@ -34,7 +34,7 @@ void testVector(size_t testSize) {
   // Retrieval using Iterator
   auto retrieveStart = std::chrono::high_resolution_clock::now();
   size_t index = 0;
-  for (const auto &value : vec) {
+  for (const auto& value : vec) {
     assert(value == static_cast<int>(index) &&
            "Retrieved value should match the inserted value");
     ++index;
@@ -197,7 +197,7 @@ void testLinkedList(size_t testSize) {
   // Itertator
   auto retrieveStart = std::chrono::high_resolution_clock::now();
   size_t index = 0;
-  for (const auto &pair : linkedList) {
+  for (const auto& pair : linkedList) {
     assert(pair.first == static_cast<int>(index) &&
            "Retrieved key should match the inserted key");
     std::string expectedValue = "Value_" + std::to_string(index);
