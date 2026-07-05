@@ -7,7 +7,11 @@ SOURCES = main.cpp
 OBJECTS = main.o
 DEPENDS = $(OBJECTS:.o=.d)
 
+ifeq ($(OS),Windows_NT)
+EXECUTABLE = main.exe
+else
 EXECUTABLE = main
+endif
 
 all: $(EXECUTABLE)
 

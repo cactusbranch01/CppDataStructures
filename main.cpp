@@ -12,6 +12,7 @@
 #include "stack/linked_stack.h"           // For linked list stacks
 #include "stack/vector_stack.h"           // For vector stacks
 #include "tree/bst.h"                     // For binary search trees
+#include "tree/red_black_tree.h"          // For red-black trees
 #include <algorithm>                      // For std::shuffle
 #include <cassert>                        // For asserts
 #include <chrono>                         // For timers
@@ -391,6 +392,78 @@ void testBST(size_t testSize) {
   assert(bst.empty() && "BST should report empty after removing all elements");
   std::cout << "All BST tests passed successfully.\n" << std::endl;}
 
+void testRedBlackTree(size_t testSize) {
+  RedBlackTree<int> tree;
+
+  // Insertion (sequential keys are fine because the tree self-balances)
+  auto insertStart = std::chrono::high_resolution_clock::now();
+  for (int i = 0; i < static_cast<int>(testSize); ++i) {
+    tree.insert(i);
+  }
+  auto insertEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> insertDuration = insertEnd - insertStart;
+  std::cout << "Insertion of " << testSize
+            << " elements in the red-black tree took "
+            << insertDuration.count() << " seconds.\n";
+  assert(tree.size() == testSize &&
+         "Red-black tree size should match the number of inserted elements");
+  assert(tree.isValid() &&
+         "Red-black tree should satisfy all red-black properties after "
+         "insertion");
+
+  // Duplicate insertion should not change the size
+  tree.insert(0);
+  assert(tree.size() == testSize &&
+         "Inserting a duplicate value should not change the tree size");
+
+  // Retrieval
+  auto retrieveStart = std::chrono::high_resolution_clock::now();
+  for (int i = 0; i < static_cast<int>(testSize); ++i) {
+    assert(tree.contains(i) &&
+           "Red-black tree should contain every inserted value");
+  }
+  auto retrieveEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> retrieveDuration = retrieveEnd - retrieveStart;
+  std::cout << "Retrieval of " << testSize
+            << " elements in the red-black tree took "
+            << retrieveDuration.count() << " seconds.\n";
+  assert(!tree.contains(static_cast<int>(testSize)) &&
+         "Red-black tree should not contain a value that was never inserted");
+
+  // Min and max
+  assert(tree.min() == 0 && "Min should be the smallest inserted value");
+  assert(tree.max() == static_cast<int>(testSize - 1) &&
+         "Max should be the largest inserted value");
+
+  // Rule of 3: copies should be deep and independent of the original
+  RedBlackTree<int> copy(tree);
+  assert(copy.size() == tree.size() &&
+         "Copied tree size should match the original");
+  assert(copy.isValid() &&
+         "Copied tree should satisfy all red-black properties");
+  copy.remove(0);
+  assert(!copy.contains(0) &&
+         "Removed value should be gone from the copied tree");
+  assert(tree.contains(0) &&
+         "Removing from the copy should not affect the original");
+
+  // Removal
+  auto removeStart = std::chrono::high_resolution_clock::now();
+  for (int i = 0; i < static_cast<int>(testSize); ++i) {
+    tree.remove(i);
+  }
+  auto removeEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> removeDuration = removeEnd - removeStart;
+  std::cout << "Removal of " << testSize
+            << " elements from the red-black tree took "
+            << removeDuration.count() << " seconds.\n";
+  assert(tree.size() == 0 &&
+         "Red-black tree should be empty after removing all elements");
+  assert(tree.empty() &&
+         "Red-black tree should report empty after removing all elements");
+  assert(tree.isValid() && "An empty red-black tree should be valid");
+  std::cout << "All red-black tree tests passed successfully.\n" << std::endl;}
+
 int main() {
   testVector(1'000'000);
   testLinkedList(1'000'000);
@@ -404,5 +477,6 @@ int main() {
   testChainingLinkedHash(1'000'000);
 
   testBST(1'000'000);
+  testRedBlackTree(1'000'000);
   return 0;
 }
