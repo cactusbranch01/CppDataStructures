@@ -350,6 +350,20 @@ public:
     }
   }
 
+  ValueType* find(const ValueType& value) {
+    Node* current = root_;
+    while (current) {
+      if (value < current->value) {
+        current = current->left;
+      } else if (current->value < value) {
+        current = current->right;
+      } else {
+        return &current->value;
+      }
+    }
+    return nullptr;
+  }
+
   bool contains(const ValueType& value) const {
     const Node* current = root_;
     while (current) {

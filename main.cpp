@@ -7,6 +7,9 @@
 #include "hashing/open_address_hash.h"    // For open address hashtables
 #include "list/linked_list.h"             // For linked lists
 #include "list/vector.h"                  // For vectors
+#include "orderbook/ladder_price_index.h"
+#include "orderbook/order_book.h"
+#include "orderbook/tree_price_index.h"
 #include "queue/circular_vector_queue.h"  // For circular vector queues
 #include "queue/linked_dequeue.h"         // For linked dequeues
 #include "stack/linked_stack.h"           // For linked list stacks
@@ -464,6 +467,220 @@ void testRedBlackTree(size_t testSize) {
   assert(tree.isValid() && "An empty red-black tree should be valid");
   std::cout << "All red-black tree tests passed successfully.\n" << std::endl;}
 
+template <typename PriceIndexType, typename... Args>
+void runOrderBookScenario(Args... args) {
+  OrderBook<PriceIndexType> book(args...);
+  Price best_price = 0;
+  bool ok = false;
+
+  assert(!book.best_bid(&best_price));
+  assert(!book.best_ask(&best_price));
+  assert(book.open_orders() == 0);
+
+  ok = book.add_limit_order(1, Side::kBuy, 100, 10);
+  assert(ok && "Limit order with a new id should be accepted");
+  ok = book.add_limit_order(2, Side::kBuy, 100, 20);
+  assert(ok);
+  ok = book.add_limit_order(3, Side::kBuy, 99, 30);
+  assert(ok);
+  ok = book.add_limit_order(1, Side::kBuy, 98, 5);
+  assert(!ok && "Limit order with a duplicate id should be rejected");
+  assert(book.open_orders() == 3);
+  ok = book.best_bid(&best_price);
+  assert(ok && best_price == 100 && "Best bid should be the highest price");
+  assert(book.bid_quantity_at(100) == 30);
+  assert(book.bid_quantity_at(99) == 30);
+
+  ok = book.add_limit_order(4, Side::kSell, 99, 25);
+  assert(ok && "Crossing limit order should be accepted and matched");
+  assert(book.trades().size() == 2);
+  assert(book.open_orders() == 2);
+  assert(book.bid_quantity_at(100) == 5);
+  ok = book.best_bid(&best_price);
+  assert(ok && best_price == 100);
+  assert(!book.best_ask(&best_price) &&
+         "Fully filled crossing order should not rest");
+
+  ok = book.cancel(2);
+  assert(ok && "Cancel of a resting order should succeed");
+  ok = book.cancel(2);
+  assert(!ok && "Cancel of an already canceled order should fail");
+  ok = book.cancel(999);
+  assert(!ok && "Cancel of an unknown order should fail");
+  ok = book.best_bid(&best_price);
+  assert(ok && best_price == 99 &&
+         "Best bid should move down after the top level empties");
+  assert(book.open_orders() == 1);
+
+  ok = book.add_limit_order(5, Side::kSell, 101, 40);
+  assert(ok);
+  ok = book.add_limit_order(6, Side::kSell, 101, 40);
+  assert(ok);
+  ok = book.add_limit_order(7, Side::kSell, 102, 40);
+  assert(ok);
+  ok = book.best_ask(&best_price);
+  assert(ok && best_price == 101 && "Best ask should be the lowest price");
+  assert(book.ask_quantity_at(101) == 80);
+
+  Quantity filled = book.add_market_order(8, Side::kBuy, 100);
+  assert(filled == 100 && "Market order should fill across price levels");
+  ok = book.best_ask(&best_price);
+  assert(ok && best_price == 102);
+  assert(book.ask_quantity_at(102) == 20);
+  assert(book.trades().size() == 5);
+
+  filled = book.add_market_order(9, Side::kBuy, 1000);
+  assert(filled == 20 &&
+         "Market order should partially fill when liquidity runs out");
+  assert(!book.best_ask(&best_price));
+
+  filled = book.add_market_order(10, Side::kSell, 50);
+  assert(filled == 30);
+  assert(!book.best_bid(&best_price));
+  assert(book.open_orders() == 0);
+  assert(book.trades().size() == 7);
+
+  Vector<Trade> log;
+  for (const auto& trade : book.trades()) {
+    log.push_back(trade);
+  }
+  assert(log[0].maker_id == 1 && log[0].taker_id == 4 && log[0].price == 100 &&
+         log[0].quantity == 10 &&
+         "Earlier order at the same price should fill first");
+  assert(log[1].maker_id == 2 && log[1].taker_id == 4 && log[1].price == 100 &&
+         log[1].quantity == 15);
+  assert(log[2].maker_id == 5 && log[2].taker_id == 8 && log[2].price == 101 &&
+         log[2].quantity == 40);
+  assert(log[3].maker_id == 6 && log[3].taker_id == 8 && log[3].price == 101 &&
+         log[3].quantity == 40);
+  assert(log[4].maker_id == 7 && log[4].taker_id == 8 && log[4].price == 102 &&
+         log[4].quantity == 20);
+  assert(log[5].maker_id == 7 && log[5].taker_id == 9 && log[5].price == 102 &&
+         log[5].quantity == 20);
+  assert(log[6].maker_id == 3 && log[6].taker_id == 10 && log[6].price == 99 &&
+         log[6].quantity == 30);
+}
+
+void testOrderBook() {
+  runOrderBookScenario<TreePriceIndex>();
+  runOrderBookScenario<LadderPriceIndex>(static_cast<Price>(1),
+                                         static_cast<Price>(200));
+  std::cout << "All order book tests passed successfully.\n" << std::endl;
+}
+
+enum class EventType { kAddLimit, kCancel, kMarket };
+
+struct OrderEvent {
+  EventType type = EventType::kAddLimit;
+  OrderId id = 0;
+  Side side = Side::kBuy;
+  Price price = 0;
+  Quantity quantity = 0;
+};
+
+Vector<OrderEvent> generateOrderEvents(size_t count, Price min_price,
+                                       Price max_price) {
+  Vector<OrderEvent> events;
+  events.reserve(count);
+  Vector<OrderId> known_ids;
+  std::mt19937 rng(7);
+  std::uniform_int_distribution<int> action_dist(0, 99);
+  std::uniform_int_distribution<Price> price_dist(min_price, max_price);
+  std::uniform_int_distribution<Quantity> quantity_dist(1, 100);
+  OrderId next_id = 1;
+
+  for (size_t i = 0; i < count; ++i) {
+    int action = action_dist(rng);
+    OrderEvent event;
+    if (action < 60 || known_ids.empty()) {
+      event.type = EventType::kAddLimit;
+      event.id = next_id++;
+      event.side = (action % 2 == 0) ? Side::kBuy : Side::kSell;
+      event.price = price_dist(rng);
+      event.quantity = quantity_dist(rng);
+      known_ids.push_back(event.id);
+    } else if (action < 85) {
+      std::uniform_int_distribution<size_t> pick(0, known_ids.size() - 1);
+      event.type = EventType::kCancel;
+      event.id = known_ids[pick(rng)];
+    } else {
+      event.type = EventType::kMarket;
+      event.id = next_id++;
+      event.side = (action % 2 == 0) ? Side::kBuy : Side::kSell;
+      event.quantity = quantity_dist(rng);
+    }
+    events.push_back(event);
+  }
+  return events;
+}
+
+template <typename PriceIndexType>
+double replayOrderEvents(OrderBook<PriceIndexType>& book,
+                         const Vector<OrderEvent>& events) {
+  CircularVectorQueue<OrderEvent> feed;
+  for (const auto& event : events) {
+    feed.push(event);
+  }
+  auto start = std::chrono::high_resolution_clock::now();
+  while (!feed.empty()) {
+    OrderEvent event = feed.pop_front();
+    switch (event.type) {
+    case EventType::kAddLimit:
+      book.add_limit_order(event.id, event.side, event.price, event.quantity);
+      break;
+    case EventType::kCancel:
+      book.cancel(event.id);
+      break;
+    case EventType::kMarket:
+      book.add_market_order(event.id, event.side, event.quantity);
+      break;
+    }
+  }
+  auto end = std::chrono::high_resolution_clock::now();
+  return std::chrono::duration<double>(end - start).count();
+}
+
+void testOrderBookThroughput(size_t testSize) {
+  constexpr Price kMinPrice = 4500;
+  constexpr Price kMaxPrice = 5500;
+  Vector<OrderEvent> events =
+      generateOrderEvents(testSize, kMinPrice, kMaxPrice);
+
+  OrderBook<TreePriceIndex> tree_book;
+  double treeDuration = replayOrderEvents(tree_book, events);
+  std::cout << "Processing of " << testSize
+            << " order events through the red-black tree order book took "
+            << treeDuration << " seconds.\n";
+
+  OrderBook<LadderPriceIndex> ladder_book(kMinPrice, kMaxPrice);
+  double ladderDuration = replayOrderEvents(ladder_book, events);
+  std::cout << "Processing of " << testSize
+            << " order events through the flat ladder order book took "
+            << ladderDuration << " seconds.\n";
+
+  assert(tree_book.open_orders() == ladder_book.open_orders() &&
+         "Both backends should hold the same resting orders");
+  assert(tree_book.trades().size() == ladder_book.trades().size() &&
+         "Both backends should produce the same trades");
+
+  Price tree_price = 0;
+  Price ladder_price = 0;
+  bool tree_has = tree_book.best_bid(&tree_price);
+  bool ladder_has = ladder_book.best_bid(&ladder_price);
+  assert(tree_has == ladder_has &&
+         "Both backends should agree on best bid presence");
+  assert((!tree_has || tree_price == ladder_price) &&
+         "Both backends should agree on the best bid");
+  tree_has = tree_book.best_ask(&tree_price);
+  ladder_has = ladder_book.best_ask(&ladder_price);
+  assert(tree_has == ladder_has &&
+         "Both backends should agree on best ask presence");
+  assert((!tree_has || tree_price == ladder_price) &&
+         "Both backends should agree on the best ask");
+  std::cout << "All order book throughput tests passed successfully.\n"
+            << std::endl;
+}
+
 int main() {
   testVector(1'000'000);
   testLinkedList(1'000'000);
@@ -478,5 +695,8 @@ int main() {
 
   testBST(1'000'000);
   testRedBlackTree(1'000'000);
+
+  testOrderBook();
+  testOrderBookThroughput(1'000'000);
   return 0;
 }
